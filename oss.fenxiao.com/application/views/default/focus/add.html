@@ -1,0 +1,319 @@
+{{include file="common/header.html"}}
+<style>
+    .news{display:none;}
+</style>
+<div class="main">
+    {{include file="common/menu.html"}}
+
+    <div id="right">
+        <!--面包屑导航-->
+        <ol class="breadcrumb">
+            <li><a href="/focus/index">关注回复配置 </a></li>
+            <li class="active">配置详情</li>
+        </ol>
+
+        <div class="right_con">
+
+            <form class="form-horizontal" id="form-save" action="/focus/save/">
+                <div class="tab-pane active" id="basic_right">
+                    <input type="hidden" name="s_id" value="{{$row.s_id}}" />
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">模板类型</label>
+                        <div class="col-sm-2">
+                            <select name="s_cate" class="form-control" id="s_cate" datatype="*" nullmsg="请选择模板类型">{{$subscribeCate}}</select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">所属内容类别</label>
+                        <div class="col-sm-2">
+                            <select name="s_type" class="form-control" id="s_type" datatype="*" nullmsg="请选择内容类别">{{$subscribeType}}</select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">内容</label>
+                        <div class="col-sm-6">
+                            <textarea name="s_content" style="width:500px;height:200px;" rows="5">{{if !is_array($row.s_content)}}{{$row.s_content}}{{/if}}</textarea>
+                        </div>
+                    </div>
+                    <div id="newsList">
+                        {{if is_array($row.s_content)}}
+                        {{foreach from=$row.s_content item=vo key=key}}
+                        <div class="content panel panel-default" id="list{{$key + 1}}">
+                            <div class="panel-heading">图文{{$key + 1}}</div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">标题</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control" name="s_title[]" value="{{$vo.s_title}}" placeholder="标题"  style="width:500px;" />
+                                    </div>
+                                </div>
+                                <div class="form-group news" >
+                                    <label class="col-sm-2 control-label">跳转链接</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control" name="s_url[]" value="{{$vo.s_url}}" placeholder="跳转链接" style="width:500px;"/>
+                                    </div>
+                                </div>
+                                <div class="form-group news">
+                                    <label class="col-sm-2 control-label">缩略图</label>
+                                    <div class="col-sm-6">
+                                        <input type="file" name="upload{{$key}}" id="upload{{$key}}" rel="{{$key}}" onchange="return ajaxFileUpload({{$key}});" />
+                                        <div style="padding-top:10px;"><img src="{{if $vo.s_thumb}}{{$smarty.const.APP_IMAGE_URL}}{{$vo.s_thumb}}{{/if}}" id="upload-img{{$key}}" style="max-width:200px;"/></div>
+                                        <input type="hidden" name="file[]" value="{{$vo.s_thumb}}" id="file{{$key}}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group news" >
+                                    <label class="col-sm-2 control-label">排序</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control" name="s_order[]" value="{{$vo.s_order|default:$key}}" placeholder="排序号" style="width:50px;"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{/foreach}}
+                        {{else}}
+                        <div class="content" id="list0">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">标题</label>
+                                <div class="col-sm-6">
+                                    <input type="text" name="s_title[]" value="" placeholder="标题" style="width:500px;" />
+                                </div>
+                            </div>
+                            <div class="form-group news" >
+                                <label class="col-sm-2 control-label">跳转链接</label>
+                                <div class="col-sm-6">
+                                    <input type="text" name="s_url[]" value="" placeholder="跳转链接"   style="width:500px;"/>
+                                </div>
+                            </div>
+                            <div class="form-group news">
+                                <label class="col-sm-2 control-label">缩略图</label>
+                                <div class="col-sm-6">
+                                    <input type="file" name="upload0" id="upload0" rel="0" onchange="return ajaxFileUpload(0);" />
+                                    <div style="padding-top:10px;"><img src="" id="upload-img0" style="max-width:200px;"/></div>
+                                    <input type="hidden" name="file[]" id="file0" value=""  />
+                                </div>
+                            </div>
+                            <div class="form-group news" >
+                                <label class="col-sm-2 control-label">排序</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" name="s_order[]" value="1" placeholder="排序号" style="width:50px;"/>
+                                </div>
+                            </div>
+                        </div>
+                        {{/if}}
+                    </div>
+                    <div class="form-group news">
+                        <label class="col-sm-2 control-label"></label>
+                        <div class="col-sm-4">
+                            <button type="button" class="btn btn-primary" id="addNews" rel="{{$count|default:0}}">添加一个图文</button>
+                            <button type="button" class="btn btn-primary" id="delNews" rel="{{$count|default:0}}">减少一个图文</button>
+                        </div>
+                    </div>
+                    <div class="form-group time">
+                        <label class="col-sm-2 control-label">时间区间</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" readonly name="s_beginTime" id="s_beginTime" placeholder="" value="{{$row.s_beginTime}}">
+                        </div>
+						<div class="col-sm-2">
+							<input type="text" class="form-control" readonly name="s_endTime" id="s_endTime" placeholder="" value="{{$row.s_endTime}}">
+						</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">状态</label>
+                        <div class="col-sm-2">
+                            <select name="s_status" class="form-control" datatype="*" null="请选择状态">{{$statusType}}</select>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label"></label>
+                    <div class="controls">
+                        <button class="btn btn-primary" type="submit">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!--&lt;!&ndash;弹窗&ndash;&gt;-->
+        <!--<form class="form-horizontal" action="/ajax/productlight/save/" method="post">-->
+        <!--<div class="modal fade" id="adminModal" tabindex="-1" role="dialog"></div>-->
+        <!--</form>-->
+    </div>
+    <div class="clear"></div>
+</div>
+<script src="/public/js/jquery.ajaxfileupload.js"></script>
+<script src="/public/js/bootstrap-customfile.js"></script>
+<script src="/public/js/bootstrap-datetimepicker.js"></script>
+<script>
+    var count = '{{$count}}';
+    var loading = $.dialog.loading('注意：正在导入数据，请耐心等待，千万不要关闭或者刷新页面！').hide();
+
+    $('#delNews').click(function(){
+        var rel = parseInt($(this).attr('rel'));
+        if(rel == 0){
+            $.dialog.tips('无法删除默认项');
+            return;
+        }
+
+        $('#list' + rel).remove();
+        $('#addNews').attr('rel', rel - 1);
+        $('#delNews').attr('rel', rel - 1);
+
+    })
+
+    $('#addNews').click(function(){
+        var rel = parseInt($(this).attr('rel'));
+        $('#addNews').attr('rel', rel + 1);
+        $('#delNews').attr('rel', rel + 1);
+        rel = rel + 1;
+        var html = '';
+        html += '<div class="content panel panel-default" id="list' + rel + '">';
+        html += '<div class="panel-heading">图文' + rel + '</div>';
+        html += '<div class="panel-body">';
+        html += '<div class="form-group">';
+        html += '<label class="col-sm-2 control-label">标题' + rel + '</label>';
+        html += '<div class="col-sm-4">';
+        html += '<input type="text" class="form-control" name="s_title[]" value="" placeholder="标题" style="width:500px;" />';
+        html += '</div>';
+        html += '</div>';
+        html += '<div class="form-group" >';
+        html += '<label class="col-sm-2 control-label">跳转链接' + rel + '</label>';
+        html += '<div class="col-sm-4">';
+        html += '<input type="text" class="form-control" name="s_url[]" value="" placeholder="跳转链接"   style="width:500px;"/>';
+        html += '</div>';
+        html += '</div>';
+        html += '<div class="form-group">';
+        html += '<label class="col-sm-2 control-label">缩略图' + rel + '</label>';
+        html += '<div class="col-sm-4">';
+        html += '<input type="file" name="upload' + rel + '" id="upload' + rel + '" rel="' + rel + '" onchange="return ajaxFileUpload(' + rel + ');" />';
+        html += '<div style="padding-top:10px;"><img src="" id="upload-img' + rel + '" style="max-width:200px;"/></div>';
+        html += '<input type="hidden" name="file[]" id="file' + rel + '" value=""  />';
+        html += '</div>';
+        html += '</div>';
+        html += '<div class="form-group" >';
+        html += '<label class="col-sm-2 control-label">排序' + rel + '</label>';
+        html += '<div class="col-sm-2">';
+        html += '<input type="text" class="form-control" name="s_order[]" value="' + rel + '" placeholder="排序号" style="width:50px;"/>';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+        $('#newsList').append(html);
+        $("#upload" + rel).customFileInput();
+    })
+
+    $('#s_type').change(function(){
+        if($(this).val() == 'news'){
+            $('.news').show();
+            $('#newsList').show();
+            $('.text').hide();
+        }else{
+            $('.news').hide();
+            $('#newsList').hide();
+            $('.text').show();
+        }
+    })
+
+    $('#s_cate').change(function(){
+        if($(this).val() == 1){
+            $('.time').hide();
+        }else{
+            $('.time').show();
+        }
+    })
+
+    $(document).ready(function(){
+        if($('#s_type').val() == 'news'){
+            $('.news').show();
+            $('#newsList').show();
+            $('.text').hide();
+        }else{
+            $('.news').hide();
+            $('#newsList').hide();
+            $('.text').show();
+        }
+
+        if($('#s_cate').val() == 1){
+            $('.time').hide();
+        }else{
+            $('.time').show();
+        }
+    })
+
+
+    $('#s_beginTime').datetimepicker({
+        format: "yyyy-mm-dd hh:ii",
+        autoclose: 1,
+        pickerPosition: "bottom-left"
+    });
+    $('#s_endTime').datetimepicker({
+        format: "yyyy-mm-dd hh:ii",
+        autoclose: 1,
+        pickerPosition: "bottom-left"
+    });
+
+    $("#form-save").Validform({
+        ajaxPost: true,
+        tipSweep: true,
+        tiptype:function(msg,o,cssctl){
+            if(o.type == 3)
+                $.dialog.tips(msg);
+        },
+        beforeSubmit:function(curform){
+        },
+        callback:function(response){
+            $.dialog.tips(response.info);
+            if ( response.status == 'y' ) {
+                window.setTimeout(function(){
+                    window.location.href = "/focus/index/";
+
+                }, 2000)
+            }
+        }
+    });
+
+
+    /*初始化上传文件*/
+    for(var i = 0; i <= count; i++){
+        $("#upload" + i).customFileInput();
+    }
+
+
+    var processing = false;
+    function ajaxFileUpload(rel) {
+        if ( processing == true ) {
+            return false;
+        }
+
+        var dialog     = $.dialog.loading('上传中，请稍等！').show();
+        processing = true;
+        $.ajaxFileUpload({
+            url:'/focus/upload/id/' + rel,
+            secureuri:false,
+            fileElementId:'upload' + rel,
+            dataType: 'json',
+            success: function (data, status){
+                setTimeout( function() {
+                    processing = false;
+                }, 500);
+                dialog.close();
+
+                if ( data.status == 'y' ) {
+                    $("#upload-img" + rel).attr('src', data.info.url).show();
+                    $('#file' + rel).val(data.info.fileName);
+                    return;
+                }
+
+                $.dialog.error(data.info);
+                return false;
+            },
+            error: function (data, status, e){
+                $.dialog.error(e);
+            }
+        });
+    }
+</script>
+{{include file="common/footer.html"}}

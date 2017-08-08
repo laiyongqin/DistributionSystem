@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no,email=no" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>{{$pageTitle}}</title>
+    <link rel="stylesheet" type="text/css" href="/public/mobile/css/style.css">
+    <script src="/public/mobile/js/jquery.12.0.js"></script>
+    <script src="/public/mobile/js/Validform_v5.3.2_min.js"></script>
+</head>
+
+<body>
+<div class="bj"></div>
+
+<div class="login">
+    <h2>旅游后台</h2>
+    <form action="/login/passport/" class="form-process">
+        <input type="hidden" name="token" value="{{$token}}" />
+    <div class="name"><i><img src="/public/mobile/images/name_tb.png"></i><input type="text"  name="username" placeholder="请输入您的用户名" aria-describedby="sizing-addon2" datatype="*" nullmsg="请输入登录用户名" /></div>
+    <div class="password"><i><img src="/public/mobile/images/password_tb.png"></i> <input type="password" name="password" placeholder="请输入您的登录密码" aria-describedby="sizing-addon2" datatype="*" nullmsg="请输入登录密码" /></div>
+    <div class="login_btn"><input name="" value="登录后台" type="submit"></div>
+    </form>
+</div>
+
+<script type="application/javascript">
+    $(".form-process").Validform({
+        btnSubmit: '.btn',
+        ajaxPost: true,
+        tipSweep: true,
+        tiptype:function(msg,o,cssctl){
+            if(o.type == 3) {
+                alert(msg);
+                return false;
+            }
+        },
+        callback:function(json){
+            if ( json.status == 'y' ) {
+                window.location.href = '/';
+            }
+            return false;
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+{{include file="common/header.html"}}
+
+<div class="main">
+    {{include file="common/menu.html"}}
+
+    <div id="right">
+        <!--面包屑导航-->
+        <ol class="breadcrumb">
+            <li><a href="javascript:void(0);">会员管理 </a></li>
+            <li class="active">用户财富管理</li>
+        </ol>
+        <div class="right_con">
+            <!--搜索区域-->
+            <form class="form-inline pull-left">
+                <div class="form-group">用户id：
+                    <input type="text" name="mid" value="{{$mid}}" class="form-control" placeholder="用户id">
+                </div>
+                <div class="form-group">添加时间：
+                    <input type="text" class="form-control" name="beginTime" id="beginTime" class="form-control" value="{{$startTime}}" placeholder="开始时间" />&nbsp;&nbsp;至&nbsp;&nbsp;
+                    <input type="text" class="form-control" name="endTime" id="endTime" class="form-control" value="{{$endTime}}" placeholder="结束时间" />
+                </div>
+
+                <button type="submit" class="btn btn-default">搜索</button>
+            </form>
+            <button type="button" class="btn btn-default pull-right" onclick="window.location.reload();">刷新界面</button>
+            <div class="clear10"></div>
+            <!-- 表格 -->
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <td>用户ID</td>
+                    <td>用户昵称</td>
+                    <td>已经提现金额</td>
+                    <td>未提现金额</td>
+                    <td>提现金额</td>
+                    <td>销售额</td>
+                    <td>奖励金额</td>
+                    <td>添加时间</td>
+                </tr>
+                {{if $data}}
+                {{foreach from=$data item=row}}
+                <tr>
+                    <td>{{$row.m_id}}</td>
+                    <td>{{$row.m_nickname}}</td>
+                    <td>{{$row.mw_had_withdraw_money}}</td>
+                    <td>{{$row.mw_not_withdraw_money}}</td>
+                    <td>{{$row.mw_withdraw_money}}</td>
+                    <td>{{$row.mw_sales_money}}</td>
+                    <td>{{$row.mw_award_money}}</td>
+                    <td>{{$row.mw_addtime}}</td>
+                </tr>
+                {{/foreach}}
+                {{/if}}
+            </table>
+
+            <!-- 分页 -->
+            {{if $data}}
+            <nav>
+                <ul class="pagination pull-right">{{$page}}</ul>
+            </nav>
+            {{/if}}
+        </div>
+    </div>
+    <div class="clear"></div>
+</div>
+<script>
+
+    $('#beginTime').datetimepicker({
+        format: "yyyy-mm-dd hh:mm",
+        autoclose: 1,
+        pickerPosition: "bottom-left"
+    });
+
+    $('#endTime').datetimepicker({
+        format: "yyyy-mm-dd hh:mm",
+        autoclose: 1,
+        pickerPosition: "bottom-left"
+    });
+</script>
+{{include file="common/footer.html"}}

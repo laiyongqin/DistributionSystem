@@ -1,0 +1,89 @@
+{{include file="common/header.html"}}
+<link rel="stylesheet" href="/public/css/tinyselect.css" />
+<style>
+#right .nav-tabs { margin-bottom:0;} 
+#right .tab-content { border:1px solid #ddd; border-top:none; padding:20px 20px 0;}
+</style>
+<div class="main">
+    {{include file="common/menu.html"}}
+    <div id="right">
+
+        <!--面包屑导航-->
+        <ol class="breadcrumb">
+            <li><a href="javascript:void(0);">系统菜单</a></li>
+            <!--<li><a href="/admin/index/">帐号管理</a></li>-->
+            <li class="active">权限管理</li>
+        </ol>
+
+        <div class="right_con">
+        <div class="alert alert-success" style="margin-bottom:30px;">
+                  <button type="button" class="close" data-dismiss="alert">×</button>
+                    Tip: 第一步:选择用户登录名; 第二步:勾选需授权的菜单; 第三步:分发权限
+        </div>
+
+        <form class="form-search" id="rightSearch" method="get" action="/right/index/">
+                    <div class="input-append">
+                        <select id="uid" name="uid" class="form-control" style="display: inline-block; width: 200px;">
+                            {{$userOptions}}
+                        </select>
+                        <button type="submit" class="btn">搜索</button>
+                    </div>
+                </form>
+
+                {{if $menuList}}
+                    <form class="form-horizontal" id="form-save" action="/right/save/" method="post">
+                        <input type="hidden" value="{{$smarty.get.uid}}" name="uid" />
+                        <div id="" class="tabbable" style="margin-top:30px;">
+                            <ul class="nav nav-tabs">
+                                {{foreach from=$topMenuList key=key item=row name=top}}
+                                <li {{if $smarty.foreach.top.first}}class="active"{{/if}}><a target="rightTop" tag="{{$row.m_tag}}_right" href="{{$row.m_url}}_right" rel="{{$row.m_id}}" data-toggle="tab">{{$row.m_name}}</a></li>
+                                {{/foreach}}
+                            </ul>
+                            <div class="tab-content">
+                                {{foreach from=$topMenuList key=key item=row name=top}}
+                                <div class="tab-pane {{if $smarty.foreach.top.first}}active{{/if}}" id="{{$row.m_tag}}_right" style="padding:20px 20px;">
+                                    {{foreach from=$menuList.$key.son item=child}}
+                                    <label class="checkbox inline"><input type="checkbox" name="right[]" {{if $child.m_id|in_array:$right}}checked{{/if}} value="{{$child.m_id}}">{{$child.m_name}}</label>
+                                    {{/foreach}}
+                                </div>
+                                {{/foreach}}
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                          <button type="submit" class="btn btn-primary" style="margin-top: 20px;">分配权限</button>
+                        </div>
+                    </form>
+                {{/if}}
+         </form>
+        </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+</div>
+<script src="/public/js/tinyselect.js"></script>
+<script>
+    //管理员列表
+    $(function(){
+        $("#uid").tinyselect();
+    });
+
+    $("#form-save").Validform({
+        ajaxPost: true,
+        tipSweep: true,
+        tiptype:function(msg,o,cssctl){
+            if(o.type == 3)
+                $.dialog.tips(msg);
+        },
+        beforeSubmit:function(curform){
+        },
+        callback:function(response){
+            $.dialog.tips(response.info);
+            if ( response.status == 'y' ) {
+                window.setTimeout(function(){
+                    location.reload();
+                }, 2000)
+            }
+        }
+    });
+</script>
+{{include file="common/footer.html"}}

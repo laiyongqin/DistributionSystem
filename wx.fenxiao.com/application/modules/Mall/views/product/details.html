@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>商品详情页</title>
+    <link rel="stylesheet" type="text/css" href="/public/css/swiper.min.css">
+    <link rel="stylesheet" type="text/css" href="/public/css/style.min.css">
+    <link rel="stylesheet" type="text/css" href="/public/css/iconfont.css">
+</head>
+
+<body>
+
+<div class="show-nav">
+    <a href="/"><i class="icon iconfont">&#xe617;</i><p>返回首页</p></a>
+    <a href="/mall/product/buy/id/{{$data.p_id}}"><i class="icon iconfont">&#xe618;</i><p>立即购买</p></a>
+</div>
+
+<div class="show-title">{{$data.p_title}}</div>
+<!-- banner -->
+<div class="swiper-container banner">
+    <div class="swiper-wrapper">
+        {{if $picBanner}}
+        {{foreach from=$picBanner item=vo}}
+        <div class="swiper-slide"><a href="javascript:void(0);"><img src="{{$vo.pp_url}}"></a></div>
+        {{/foreach}}
+        {{/if}}
+    </div>
+    <!-- Add Pagination -->
+    <div class="swiper-pagination"></div>
+</div>
+
+<div class="show-details">
+    <div class="text">
+        {{if $data.p_event_price > 0}}
+        <span><del>原价：￥{{$data.p_original_price}}</del></span>
+        <span>活动价：￥{{$data.p_event_price}}</span>
+        {{else}}
+        <span>原价：￥{{$data.p_original_price}}</span>
+        {{/if}}
+    </div>
+</div>
+
+<div class="show-content">
+    <div class="title">商品简介<i></i></div>
+    {{$data.p_content}}
+</div>
+
+<script src="/public/js/jquery-2.1.4.js"></script>
+<script src="/public/js/swiper.jquery.min.js"></script>
+<script>
+
+    var swiper = new Swiper('.swiper-container', {
+        pagination: '.swiper-pagination',
+        nextButton: '.swiper-button-next',
+        prevButton: '.swiper-button-prev',
+        paginationClickable: true,
+        spaceBetween: 30,
+        centeredSlides: true,
+        autoplay: 5000,
+        autoplayDisableOnInteraction: false
+    });
+
+    $(document).ready(function() {
+        var size =$(".show-details .text").children("span").length
+        if(size == 1)
+        {
+            $(".show-details .text").addClass("one")
+        }
+    });
+</script>
+
+<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+    var appId      = '{{$signPackage.appId}}';var timestamp = '{{$signPackage.timestamp}}';
+    var nonceStr   = '{{$signPackage.nonceStr}}';var signature = '{{$signPackage.signature}}';
+    var pid        = '{{$data.p_id}}';
+    var title      = "{{$data.p_title}}";
+    var main_title = '【上善网络】' + title;
+    var link       = "{{$smarty.const.APP_DOMAIN}}";
+</script>
+<script>
+    wx.config({
+        appId: appId,
+        timestamp:timestamp,
+        nonceStr: nonceStr,
+        signature: signature,
+        jsApiList: [
+            'onMenuShareTimeline',
+            'onMenuShareAppMessage',
+            'onMenuShareQQ'
+        ]
+    });
+
+    wx.ready(function () {
+        wx.onMenuShareTimeline({
+            title: main_title,
+            desc:  title,
+            link:  "{{$smarty.const.APP_DOMAIN}}mall/product/details/id/" + pid,
+            imgUrl: '{{$data.p_cover}}',
+            trigger: function (res) {
+            },
+            success: function (res) {
+                getShareBack();
+            },
+            cancel: function (res) {
+            },
+            fail: function (res) {
+            }
+        });
+
+        wx.onMenuShareAppMessage({
+            title: main_title,
+            desc:  title,
+            link:  "{{$smarty.const.APP_DOMAIN}}mall/product/details/id/" + pid,
+            imgUrl: '{{$data.p_cover}}',
+            trigger: function (res) {
+            },
+            success: function (res) {
+                getShareBack();
+            },
+            cancel: function (res) {
+            },
+            fail: function (res) {
+            }
+        });
+
+        wx.onMenuShareQQ({
+            title: main_title,
+            desc:  title,
+            link:  "{{$smarty.const.APP_DOMAIN}}mall/product/details/id/" + pid,
+            imgUrl: '{{$data.p_cover}}',
+            trigger: function (res) {
+            },
+            success: function (res) {
+                getShareBack();
+            },
+            cancel: function (res) {
+            },
+            fail: function (res) {
+            }
+        });
+    });
+
+    //分享回调数据
+    function getShareBack(){
+        //分享完成 回调数据
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+{{include file="common/header.html"}}
+<style>
+    .right_con { text-align:center; margin: 0 auto !important;}
+    .right_con .row  {  margin:0; }
+    .right_con .box  { position:relative; background:#333; color:#fff; height:100px; border:5px solid #FFF;line-height:100px; font-size:16px; cursor:pointer;}
+    .right_con .box a { display:block; color:#FFF;}
+    .right_con .box span { position:absolute; top:0px; left:0px; font-size:90px; transform:rotate(20deg); transition:.3s transform;}
+    .right_con .box:hover span         { opacity:.8; transform:scale(1.2, 1.2); transition:.4s transform; transform:rotate(20deg);}
+    .tab            { margin:0 auto; width:97%;}
+    .table       { margin:0 auto; width:96%;}
+</style>
+
+<div class="main">
+    {{include file="common/menu.html"}}
+
+    <div id="right">
+        <!--面包屑导航-->
+        <ol class="breadcrumb">
+            <li><a href="/">管理首页 </a></li>
+            <li class="active">管理首页</li>
+        </ol>
+
+        <div class="right_con row">
+            <div class="box col-md-3" style="background:#6f5499;"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>今日下单数：{{$orderNumber}}</div>
+            <div class="box col-md-3" style="background:#0769ad;"><span class="glyphicon glyphicon-yen" aria-hidden="true"></span>今日销售额：￥{{$salesMoney}}</div>
+            <div class="box col-md-3" style="background:#4caf50;"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span><a href="/order/index/">订单管理</a></div>
+            <div class="box col-md-3" style="background:#cf4646;"><span class="glyphicon-filter glyphicon glyphicon-briefcase" aria-hidden="true"></span><a href="/product/index">商品管理</a></div>
+        </div>
+
+        <table class="table">
+            <caption>最新登录日志</caption>
+            <thead>
+            <tr>
+                <!--<th>#</th>-->
+                <th>用户名</th>
+                <th>姓名</th>
+                <th>登录IP</th>
+                <th>登录时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{if $loginLogList}}
+            {{foreach from=$loginLogList item=row}}
+            <tr>
+                <!--<th scope="row">1</th>-->
+                <td>{{$row.ll_username}}</td>
+                <td>{{$row.ll_realname}}</td>
+                <td>{{$row.ll_login_ip}}</td>
+                <td>{{$row.ll_login_time}}</td>
+            </tr>
+            {{/foreach}}
+            {{/if}}
+            </tbody>
+        </table>
+
+        <!--弹窗区域-->
+        {{include file="index/modal.html"}}
+    </div>
+    <div class="clear"></div>
+</div>
+
+{{include file="common/footer.html"}}

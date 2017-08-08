@@ -1,0 +1,44 @@
+{{include file="common/header.html"}}
+
+<div class="main">
+    {{include file="common/menu.html"}}
+
+    <div id="right">
+        <!--面包屑导航-->
+        <ol class="breadcrumb">
+            <li><a href="javascript:void(0);">帮助文档 </a></li>
+            <li class="active">{{$breadTitle}}</li>
+        </ol>
+
+        <div class="right_con">
+            <div class="new_list">
+                <ul>
+                    {{if $data}}
+                    {{foreach from=$data item=vo}}
+                    <li>
+                        <a href="/help/detail?id={{$vo.n_id}}">
+                            <div class="title">{{$vo.n_title}}</div>
+                            <div class="time">{{$vo.n_addtime}}</div>
+                        </a>
+                    </li>
+                    {{/foreach}}
+                    {{/if}}
+
+                </ul>
+                <div class="clear"></div>
+            </div>
+
+        </div>
+        <!-- 分页 -->
+        {{if $data}}
+        <nav>
+            <ul class="pagination pull-right">{{$page}}</ul>
+        </nav>
+        {{/if}}
+        <!--弹窗区域-->
+        {{include file="index/modal.html"}}
+    </div>
+    <div class="clear"></div>
+</div>
+
+{{include file="common/footer.html"}}

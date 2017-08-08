@@ -1,0 +1,130 @@
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="passportModalLabel">{{if $id}}修改广告{{else}}添加广告{{/if}}</h4>
+        </div>
+        <input type="hidden" name="id" value="{{$row.a_id}}" />
+        <div class="modal-body">
+            <div class="alert alert-dismissible" role="alert" style="display: none;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong></strong>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">标题</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="a_title" value="{{$row.a_title}}" placeholder="banner名称" datatype="*" nullmsg="请填写banner名称" style="width: 300px;"/>
+                </div>
+                <span class="help-inline" style="margin-left: 20px;color:red;">*</span>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">封面图</label>
+                <div class="col-sm-6">
+                    <input type="file" name="upload" id="upload" onchange="return ajaxFileUpload();" />
+                    <div style="padding-top:10px;"><img src="{{if $row.a_picture}}{{$row.a_picture}}{{/if}}" id="upload-img" style="max-width:300px;{{if !$row.a_picture}}display:none;{{/if}}"/></div>
+                    <input type="hidden" name="a_picture" id="file" value="{{$row.a_picture}}"  datatype="*" nullmsg="请提交广告图片"/>
+                </div>
+                <span class="help-inline" style="margin-left: 20px;color:red;">*</span>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">别名</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="a_alias" value="{{$row.a_alias}}" placeholder="别名" style="width: 200px;" {{if $row.a_id}}readonly{{/if}}/>
+                </div>
+                <span class="help-inline" style="margin-left: 20px;color:red;">*</span>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">链接地址</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="a_link" value="{{$row.a_link}}" placeholder="链接地址" datatype="url" nullmsg="请填写地址" style="width: 300px;"/>
+                </div>
+                <span class="help-inline" style="margin-left: 20px;color:red;">*</span>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">状态</label>
+                <div class="col-sm-6">
+                    <select datatype="*"  nullmsg="请选择状态" id="a_status" name="a_status" class="form-control" style="width:200px;">
+                        {{$statusOption}}
+                    </select>
+                </div>
+                <span class="help-inline" style="margin-left: 20px;color:red;">*</span>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="submit" class="btn btn-primary btn-submit">确认修改</button>
+        </div>
+    </div>
+</div>
+
+<script src="/public/js/umeditor/umeditor.config.js"></script>
+<script src="/public/js/umeditor/umeditor.js"></script>
+<script src="/public/js/umeditor/lang/zh-cn/zh-cn.js"></script>
+<script src="/public/js/jquery.ajaxfileupload.js"></script>
+<script src="/public/js/bootstrap-customfile.js"></script>
+<script src="/public/js/bootstrap-datetimepicker.js"></script>
+<script>
+    var editor =  '';
+
+    $(function(){
+        editor = UM.getEditor('n_content');
+    });
+
+    $("#form-save").Validform({
+        ajaxPost: true,
+        tipSweep: true,
+        tiptype:function(msg,o,cssctl){
+            if(o.type == 3)
+                $.dialog.tips(msg);
+        },
+        beforeSubmit:function(curform){
+        },
+        callback:function(response){
+            $.dialog.tips(response.info);
+            if ( response.status == 'y' ) {
+                window.setTimeout(function(){
+                    location.reload();
+                }, 2000)
+            }
+        }
+    });
+
+    /*初始化上传文件*/
+    $("#upload").customFileInput();
+    var processing = false;
+    function ajaxFileUpload() {
+        if ( processing == true ) {
+            return false;
+        }
+
+        var dialog     = $.dialog.loading('上传中，请稍等！').show();
+        processing = true;
+        $.ajaxFileUpload({
+            url:'/ads/upload/',
+            secureuri:false,
+            fileElementId:'upload',
+            dataType: 'json',
+            success: function (data, status){
+                setTimeout( function() {
+                    processing = false;
+                }, 500);
+                dialog.close();
+
+                if ( data.status == 'y' ) {
+                    $("#upload-img").attr('src', data.info.url).show();
+                    $('#file').val(data.info.url);
+                    return;
+                }
+
+                $.dialog.error(data.info);
+                return false;
+            },
+            error: function (data, status, e){
+                $.dialog.error(e);
+            }
+        });
+    }
+</script>

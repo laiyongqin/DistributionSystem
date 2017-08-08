@@ -1,0 +1,34 @@
+<div class="panel panel-success profile_content">
+<div id="profileType_{{$pt_id}}" class="profileType_content">
+    <ul class="breadcrumb">
+        <li><a href="#">{{$ptInfo.pt_name}}</a></li>
+        <li class="active">套餐配置</li>
+    </ul>
+
+   <table name="ptInfo_{{$pt_id}}" id="ptInfo_{{$pt_id}}" style="border:1px;" class="ptInfo_content">
+    <tbody  class="lp-td">
+    <tr>
+        <td width="200px">名称</td>
+        <td width="100px">库存</td>
+        <td width="100px">操作</td>
+    </tr>
+    </tbody>
+    <tbody id="ppList_{{$pt_id}}" >
+    <input type="hidden" name="pp_id[{{$pt_id}}][{{$count}}]" value="">
+    <tr id="pp_{{$count}}">
+        <td width="200px"><input class="form-control" type="text"  style="width:180px;" name="pp_name[{{$pt_id}}][{{$count}}]" value=""></td>
+        <td width="100px"><input class="form-control" type="text"  style="width:90px;" name="pp_stock[{{$pt_id}}][{{$count}}]" value=""></td>
+        <td width="100px">
+            <a class="btn btn-danger" href="javascript:void(0);" role="button" onclick="delProfile({{$count}})">删除</a>
+        </td>
+    </tr>
+
+    </tbody>
+    <tr>
+        <td width="200px" class="pp_td"><a class="btn btn-primary" href="javascript:void(0);" role="button" onclick="addPpInfo({{$pt_id}})" style="display: inline-block;">增加一项</a><a class="btn btn-danger" href="javascript:void(0);" role="button" style="display: inline-block;" onclick="delProfileType({{$pt_id}})">删除{{$ptInfo.pt_name}}</a></td>
+        <td width="80px"></td>
+        <td width="100px"></td>
+    </tr>
+</table>
+</div>
+    </div>

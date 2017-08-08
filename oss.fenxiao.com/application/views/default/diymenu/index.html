@@ -1,0 +1,79 @@
+{{include file="common/header.html"}}
+
+<div class="main">
+    {{include file="common/menu.html"}}
+
+    <div id="right">
+        <!--面包屑导航-->
+        <ol class="breadcrumb">
+            <li><a href="javascript:void(0);">微信管理 </a></li>
+            <li class="active">自定义菜单</li>
+        </ol>
+
+        <div class="right_con">
+            <!--搜索区域-->
+            <form class="form-inline pull-left">
+                <div class="form-group">菜单：
+                    <select name="pid" class="form-control">
+                       {{$menuOption}}
+                    </select>
+                </div>
+                <div class="form-group">状态：
+                    <select name="status" class="form-control">
+                        {{$statusOption}}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-default">搜索</button>
+            </form>
+            <button type="button" class="btn btn-default pull-right" onclick="window.location.reload();">刷新界面</button>
+            <a href="#" data-json="确认要生成菜单吗？" data-href="/diymenu/create/" type="button" class="btn btn-primary pull-right">生成菜单</a>
+            <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#adminModal" href="/diymenu/form/">添加菜单</button>
+
+            <div class="clear10"></div>
+
+            <!-- 表格 -->
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <td>序号</td>
+                    <td>上级菜单</td>
+                    <td>菜单名称</td>
+                    <td>菜单类型</td>
+                    <td>菜单键值</td>
+                    <td>排序</td>
+                    <td>状态</td>
+                    <td>添加时间</td>
+                    <td>操作</td>
+                </tr>
+                {{if $data}}
+                {{foreach from=$data item=row}}
+                <tr>
+                    <td>{{$row.wm_id}}</td>
+                    <td>{{$menuList[$row.wm_pid]}}</td>
+                    <td>{{$row.wm_name}}</td>
+                    <td>{{$row.wm_type}}</td>
+                    <td>{{$row.wm_key}}</td>
+                    <td>{{$row.wm_sort}}</td>
+                    <td><a href="#" data-json="确认要更改状态吗？" data-href="/ajax/diymenu/status/id/{{$row.wm_id}}/status/{{$row.wm_status}}">
+                        <i class="glyphicon {{if $row.wm_status == 1}}glyphicon-eye-open{{else}}glyphicon-eye-close{{/if}}" title="{{if $row.wm_status == 2}}禁用{{else}}正常{{/if}}"></i>
+                        {{if $row.wm_status == 1}}<span class="label label-success">正常</span>{{else}}<span class="label label-warning">禁用</span>{{/if}}
+                    </a></td>
+                    <td>{{$row.wm_addtime}}</td>
+                    <td>
+                        <a  data-toggle="modal" data-target="#adminModal" href="/diymenu/form/id/{{$row.wm_id}}" title="编辑分类">编辑</a>&nbsp;&nbsp;
+                    </td>
+                </tr>
+                {{/foreach}}
+                {{/if}}
+            </table>
+
+        </div>
+
+        <!--弹窗-->
+        <form class="form-horizontal" action="/ajax/diymenu/save" method="post">
+            <div class="modal fade" id="adminModal" tabindex="-1" role="dialog"></div>
+        </form>
+    </div>
+    <div class="clear"></div>
+</div>
+
+{{include file="common/footer.html"}}

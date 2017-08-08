@@ -1,0 +1,13 @@
+{{if $data}}
+{{foreach from=$data item=v}}
+<li>
+    <img src="{{$smarty.const.IMAGE_URL}}{{$v.m_avatar}}" width="185" height="185">
+    <div class="text">
+        <p>昵称：{{$v.m_nickname}}</p>
+        <p>会员：{{if $v.m_vip==2}}是{{else}}否{{/if}}</p>
+        <p>订单号：{{$v.so_order_no}}</p>
+        <p>会员ID：{{$v.so_spokesman}}</p>
+    </div>
+</li>
+{{/foreach}}
+{{/if}}

@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>{{$pageTitle}}</title>
+    <link rel="stylesheet" type="text/css" href="/public/css/style.min.css">
+</head>
+
+<body>
+{{include file="application/views/common/footer.html"}}
+<!-- 头像  -->
+<div class="member-header">
+    <a class="set" href="/member/profile/index"><i class="icon iconfont">&#xe73a;</i></a>
+    <i class="shadow"></i>
+    <div class="user">
+        <div class="img">
+            <p>{{$userData.m_nickname}}</p>
+            <img src="{{$userData.m_avatar}}"></div>
+    </div>
+</div>
+
+<!-- 会员信息  -->
+<div class="member-form">
+    <ul>
+        <li><i></i>ID：{{$userData.m_id}}</li>
+        <li><i></i>您是由[{{if $spokesman.m_nickname}}{{$spokesman.m_nickname}}{{else}}{{$configName}}{{/if}}]推荐</li>
+        <li><i></i>{{if $userData.m_vip==1}}
+            会员：我还不是代言人
+            {{else}}
+            会员：我是代言人
+            {{/if}}
+        </li>
+        <li><i></i><span>
+            {{if $userData.m_vip==1}}
+            <a href="/index">点击链接成为会员</a>
+            {{else}}
+            <a href="/member/qrcode/index/">我的推广二维码</a>
+            {{/if}}
+        </span></li>
+        <li>
+            <i></i>
+            <p><strong>{{if $wealth.mw_sales_money}}{{$wealth.mw_sales_money}}{{else}}0{{/if}}元</strong></p>
+            <p>销售额</p>
+        </li>
+        <li>
+            <i></i>
+            <p><strong>{{if $wealth.mw_award_money}}{{$wealth.mw_award_money}}{{else}}0{{/if}}元</strong></p>
+            <p>我的奖励</p>
+        </li>
+    </ul>
+</div>
+
+<!-- menu  -->
+<div class="member-menu">
+    <ul>
+        <li class="on">
+            <div class="title">
+                <i class="icon iconfont">&#xe788;</i>
+                我是代言人
+                <em>({{$promoterNumber}})</em>
+                <span class="icon iconfont">&#xe772;</span>
+            </div>
+            <ul>
+                <li><a href="/member/member/list/">代言人推广<strong>({{$promoterNumber}})</strong></a></li>
+            </ul>
+        </li>
+
+        <li>
+            <div class="title">
+                <i class="icon iconfont">&#xe746;</i>
+                代言人推广
+                <em>{{$salesOrderAlread + $salesOrderEnd}}单(￥{{$noPayData + $goPayData + $takeData}})</em>
+                <span class="icon iconfont">&#xe772;</span>
+            </div>
+            <ul>
+                <li><a href="/member/member/order/?type=1">下单未购买<strong>{{$salesOrderAlread}}单(￥{{$noPayData}})</strong></a></li>
+                <li><a href="/member/member/order/?type=2">下单已购买<strong>{{$salesOrderEnd}}单(￥{{$goPayData + $takeData}})</strong></a></li>
+            </ul>
+        </li>
+        <li>
+            <div class="title">
+                <i class="icon iconfont">&#xe756;</i>
+                我的财富
+                <strong>￥{{$noPayData + $goPayData + $takeData}}</strong>
+                <span class="icon iconfont">&#xe772;</span>
+            </div>
+            <ul>
+                <li>未付款订单财富<strong>{{if $noPayData}}{{$noPayData}}{{else}}0{{/if}}</strong></li>
+                <li>已付款订单财富<strong>{{if $goPayData}}{{$goPayData}}{{else}}0{{/if}}</strong></li>
+                <li>已收货订单财富<strong>{{if $takeData}}{{$takeData}}{{else}}0{{/if}}</strong></li>
+                <li>已提现财富<strong>{{if $wealth.mw_had_withdraw_money}}{{$wealth.mw_had_withdraw_money}}{{else}}0{{/if}}</strong></li>
+                <li>可提现财富<strong>{{$wealth.mw_not_withdraw_money}}</strong></li>
+            </ul>
+        </li>
+
+    </ul>
+    <a class="cash" href="/member/withdraw/index/"><i class="icon iconfont">&#xe785;</i>申请提现<span class="icon iconfont">&#xe61c;</span></a>
+</div>
+
+<script src="/public/js/jquery-2.1.4.js"></script>
+<script>
+    $(document).ready(function(){
+        $(".member-menu ul li").click(function(){
+            if( $(this).hasClass("on")) {
+                $(this).removeClass("on")
+            } else {
+                $(this).addClass("on")
+            }
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<div class="table-responsive">
+    <table class="table">
+        <thead style="border-bottom: solid 2px #d9edf7;">
+        <tr>
+            <th>时间</th>
+            <th>信息</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{if $expressData}}
+        {{foreach from=$expressData.data item=v}}
+        <tr>
+            <td>{{$v.ftime}}</td>
+            <td>{{$v.context}}</td>
+        </tr>
+        {{/foreach}}
+        {{/if}}
+        </tbody>
+    </table>
+</div>

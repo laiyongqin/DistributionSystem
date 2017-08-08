@@ -1,0 +1,160 @@
+{{include file="common/header.html"}}
+
+<div class="main">
+    {{include file="common/menu.html"}}
+
+    <div id="right">
+        <!--面包屑导航-->
+        <ol class="breadcrumb">
+            <li><a href="javascript:void(0);">订单管理 </a></li>
+            <li class="active">订单管理</li>
+        </ol>
+
+
+        <div class="right_con">
+            <!--搜索区域-->
+            <form class="form-inline pull-left">
+                <div class="form-group">
+                    <label style="display: block;">支付状态:</label>
+                   <select name="psid" id="psid" class="form-control">
+                    {{$payOption}}
+                </select>
+                </div>
+                <div class="form-group">
+                    <label style="display: block;">订单状态:</label>
+                    <select name="osid" id="osid" class="form-control">
+                    {{$orderOption}}
+                </select>
+                </div>
+                <div class="form-group">
+                    <label style="display: block;">商品名称:</label>
+                    <input type="text" name="name" value="{{$title}}" class="form-control" placeholder="商品名称">
+                </div>
+                <div class="form-group">
+                    <label style="display: block;">订单编号:</label>
+                    <input type="text" name="orderSn" value="{{$orderSn}}" class="form-control" placeholder="订单编号">
+                </div>
+                <div class="form-group">
+                    <label style="display: block;">订单创建时间:</label>
+                    <input type="text" class="form-control" name="startTime" id="startTime" value="{{$startTime}}" style="width:180px; display: inline-block;"> ~
+                    <input type="text" class="form-control" name="endTime" id="endTime" value="{{$endTime}}" style="width:180px; display: inline-block;">&nbsp;&nbsp;
+                </div>
+
+                <button type="submit" class="btn btn-default" style="width:100px;margin-top:20px;">搜索</button>
+            </form>
+            <button type="button" class="btn btn-default pull-right" onclick="window.location.reload();">刷新界面</button>
+            <div class="clear10"></div>
+
+            <!-- 表格 -->
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <td>编号</td>
+                    <td>用户ID</td>
+                    <td>订单编号</td>
+                    <td>商品名称</td>
+                    <td>套餐名称</td>
+                    <td>单价</td>
+                    <td>数量</td>
+                    <td>实付金额</td>
+                    <td>支付状态</td>
+                    <td>创建时间</td>
+                    <td>更新时间</td>
+                    <td>操作</td>
+                </tr>
+                {{if $data}}
+                {{foreach from=$data item=row}}
+                <tr>
+                    <td>{{$row.o_id}}</td>
+                    <td>{{$row.m_id}}</td>
+                    <td>{{$row.o_order_no}}</td>
+                    <td>{{$row.p_title}}</td>
+                    <td>{{$row.pp_title}}</td>
+                    <td>{{$row.p_price}}</td>
+                    <td>{{$row.o_number}}</td>
+                    <td>{{$row.o_payment_amount}}</td>
+                    <td>{{if $row.o_pay_status==1}}<span class="label label-danger"><i class="glyphicon glyphicon-remove"></i>&nbsp;未支付</span>{{else if $row.o_pay_status==2}}<span class="label label-danger"><i class="glyphicon glyphicon-remove"></i>&nbsp;取消订单</span>{{else if $row.o_pay_status==3}}<span class="label label-success"><i class="glyphicon glyphicon-ok"></i>&nbsp;已支付</span>{{/if}}</td>
+                    <td>{{$row.o_addtime}}</td>
+                    <td>{{$row.o_updatetime}}</td>
+                    <td>
+                        <!--未支付 And 未发货--->
+                        {{if $row.o_order_status==1 && $row.o_pay_status==1}}
+                        <a data-toggle="modal" data-target="#priceModal" href="{{$baseUrl}}priceForm/id/{{$row.o_id}}" title="修改价格"><span class="label label-primary"><i class="glyphicon glyphicon-check"></i>&nbsp;改价</span></a>
+                        <!--<a data-toggle="modal" data-target="#closeModal" href="{{$baseUrl}}closeForm/id/{{$row.o_id}}" title="关闭订单"><span class="label label-danger"><i class="glyphicon glyphicon-eye-close"></i>&nbsp;关闭订单</span></span></a>-->
+                        <!--已支付 And 未发货--->
+                        {{else if $row.o_order_status==1 && $row.o_pay_status==3}}
+                        <a data-toggle="modal" data-target="#expressModal" href="{{$baseUrl}}expressForm/id/{{$row.o_id}}" title="填写快递"><span class="label label-info"><i class="glyphicon glyphicon-plane"></i>&nbsp;快递</span></span></a>
+                        <a href="#" data-json="确认要发货么？" data-href="/order/send/id/{{$row.o_id}}"><span class="label label-danger"><i class="glyphicon glyphicon-import"></i>&nbsp;发货</span></span></a>
+                        <!--已支付 And 已发货--->
+                        {{else if $row.o_order_status==2 && $row.o_pay_status==3}}
+                        <a data-toggle="modal" data-target="#expressModal" href="{{$baseUrl}}expressForm/id/{{$row.o_id}}" title="修改快递"><span class="label label-info"><i class="glyphicon glyphicon-plane"></i>&nbsp;快递</span></a>
+                        <!--<a href="#" data-json="确认要确认收货么？" data-href="/order/status/id/{{$row.o_id}}">-->
+                            <!--{{if $row.o_order_status==2 && $row.o_pay_status==3}}-->
+                            <!--<span class="label label-primary"><i class="glyphicon glyphicon-ok"></i>&nbsp;确认收货</span>-->
+                            <!--{{/if}}-->
+                        <!--</a>-->
+                        {{/if}}
+                        {{if $row.o_order_status==3 && $row.o_pay_status==3}}
+                        <span class="label label-warning"><i class="glyphicon glyphicon-ok"></i>&nbsp;交易完成</span>
+                        {{/if}}
+                        <a href="{{$baseUrl}}details/id/{{$row.o_id}}" title="订单详情"><span class="label label-success"><i class="glyphicon glyphicon-eye-open"></i>&nbsp;详情</span></a>
+                    </td>
+                </tr>
+                {{/foreach}}
+                {{/if}}
+            </table>
+
+            <!-- 分页 -->
+            {{if $data}}
+            <nav>
+                <ul class="pagination pull-right">{{$page}}</ul>
+            </nav>
+            {{/if}}
+        </div>
+
+        <!--改价弹窗-->
+        <form class="form-horizontal" action="/ajax/order/priceSave" method="post">
+            <div class="modal fade" id="priceModal" tabindex="-1" role="dialog"></div>
+        </form>
+        <!--快递弹窗-->
+        <form class="form-horizontal" action="/ajax/order/expressSave" method="post">
+            <div class="modal fade" id="expressModal" tabindex="-1" role="dialog"></div>
+        </form>
+        <!--关闭弹窗-->
+        <!--<form class="form-horizontal" action="/ajax/order/closeSave" method="post">-->
+            <!--<div class="modal fade" id="closeModal" tabindex="-1" role="dialog"></div>-->
+        <!--</form>-->
+    </div>
+    <div class="clear"></div>
+</div>
+
+<script>
+    $("#form-save").Validform({
+        ajaxPost: true,
+        tipSweep: true,
+        tiptype:function(msg,o,cssctl){
+            if(o.type == 3)
+                $.dialog.tips(msg);
+        },
+        beforeSubmit:function(curform){
+        },
+        callback:function(response){
+            $.dialog.tips(response.info);
+            if ( response.status == 'y' ) {
+                window.setTimeout(function(){
+                    location.reload();
+                }, 2000)
+            }
+        }
+    });
+
+</script>
+<link href="/public/css/bootstrap-datetimepicker.css" rel="stylesheet">
+<script src="/public/js/bootstrap-datetimepicker.js"></script>
+<script>
+    $("#startTime,#endTime").datetimepicker({
+        format: "yyyy-mm-dd hh:ii",
+        autoclose: 1,
+        pickerPosition: "bottom-left"
+    });
+</script>
+{{include file="common/footer.html"}}

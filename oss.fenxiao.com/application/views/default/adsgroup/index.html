@@ -1,0 +1,70 @@
+{{include file="common/header.html"}}
+<div class="main">
+    {{include file="common/menu.html"}}
+    <div id="right">
+        <!--面包屑导航-->
+        <ol class="breadcrumb">
+            <li><a href="javascript:void(0);">广告管理 </a></li>
+            <li class="active">广告组管理列表</li>
+        </ol>
+
+        <div class="right_con">
+            <!--搜索区域-->
+            <form class="form-inline pull-left" id="searchForm">
+                <div class="form-group">广告组名：
+                    <input type="text" name="title" value="{{$title}}" class="form-control" placeholder="广告组名" style="width: 300px;">
+                </div>
+                <button type="submit" class="btn btn-default">搜索</button>
+            </form>
+            <button type="button" class="btn btn-default pull-right" onclick="window.location.reload();">刷新界面</button>
+            <a type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#adsgroupModal" href='/adsgroup/form/'>添加广告组</a>
+            <div class="clear10"></div>
+
+            <!-- 表格 -->
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <td>广告组名</td>
+                    <td>广告组别名</td>
+                    <td>关联广告</td>
+                    <td>添加时间</td>
+                    <td>操作</td>
+                </tr>
+                {{if $data}}
+                {{foreach from=$data item=row}}
+                <tr>
+                    <td>{{$row.ag_name}}</td>
+                    <td>{{$row.ag_cname}}</td>
+                    <td rel="eye">
+                        <div class="ad-list ad-hide">
+                            <div class="pull-left">
+                                <p>共有{{$row.a_counts}}个广告</p>
+                                {{foreach from=$row.a_ids item=ad}}
+                                <p><a href="{{$ad.a_link}}" target="_blank"><i class="icon-picture"></i> {{$ad.a_title}}</a>&nbsp;状态： {{if $ad.a_status == 1}}[开启]{{else}}[关闭]{{/if}}</p>
+                                {{/foreach}}
+                            </div>
+
+                            <div class="clear"></div>
+                        </div></td>
+                    <td>{{$row.ag_addtime}}</td>
+                    <td>
+                        <a data-toggle="modal" data-target="#adsgroupModal" class="glyphicon glyphicon-edit" href="{{$baseUrl}}/form/id/{{$row.ag_id}}" title="编辑"></a>&nbsp;&nbsp;
+                    </td>
+                </tr>
+                {{/foreach}}
+                {{/if}}
+            </table>
+            <!-- 分页 -->
+            {{if $data}}
+            <nav>
+                <ul class="pagination pull-right">{{$page}}</ul>
+            </nav>
+            {{/if}}
+        </div>
+        <!--广告组弹窗-->
+        <form class="form-horizontal" action="/ajax/adsgroup/save" method="post">
+            <div class="modal fade" id="adsgroupModal" tabindex="-1" role="dialog"></div>
+        </form>
+    </div>
+    <div class="clear"></div>
+</div>
+{{include file="common/footer.html"}}

@@ -1,0 +1,9 @@
+<div class="goods-menu menu">
+    <a {{if $action=='product'}}class="on"{{/if}} href="/product/index?action=product">商品列表</a>
+    <a {{if $action=='order'}}class="on"{{/if}} href="/order/index?tid=3&action=order">订单管理</a>
+    <a {{if $action=='refund'}}class="on"{{/if}} href="/refund/index?tid=1&action=refund">退款管理</a>
+    <a {{if $action=='settlement'}}class="on"{{/if}} href="/settlement/index?action=settlement">结算</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>公告详情</title>
+    <link rel="stylesheet" type="text/css" href="/public/css/style.min.css">
+    <link rel="stylesheet" type="text/css" href="/public/css/iconfont.css">
+</head>
+
+<body>
+
+<div class="news-nav">
+    <a href="/"><i class="icon iconfont">&#xe617;</i><p>返回首页</p></a>
+</div>
+
+<div class="news-show">
+    <div class="show-title">{{$data.n_title}}</div>
+    <div class="show-content">
+        {{$data.n_content}}
+    </div>
+</div>
+
+<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+    var appId      = '{{$signPackage.appId}}';var timestamp = '{{$signPackage.timestamp}}';
+    var nonceStr   = '{{$signPackage.nonceStr}}';var signature = '{{$signPackage.signature}}';
+    var nid        = '{{$data.n_id}}';
+    var title      = "{{$data.n_title}}";
+    var main_title = '【上善网络】' + title;
+    var link       = "{{$smarty.const.APP_DOMAIN}}";
+</script>
+<script>
+    wx.config({
+        appId: appId,
+        timestamp:timestamp,
+        nonceStr: nonceStr,
+        signature: signature,
+        jsApiList: [
+            'onMenuShareTimeline',
+            'onMenuShareAppMessage',
+            'onMenuShareQQ'
+        ]
+    });
+
+    wx.ready(function () {
+        wx.onMenuShareTimeline({
+            title: main_title,
+            desc:  title,
+            link:  "{{$smarty.const.APP_DOMAIN}}mall/news/details/id/" + nid,
+            imgUrl: '{{$data.n_cover}}',
+            trigger: function (res) {
+            },
+            success: function (res) {
+                getShareBack();
+            },
+            cancel: function (res) {
+            },
+            fail: function (res) {
+            }
+        });
+
+        wx.onMenuShareAppMessage({
+            title: main_title,
+            desc:  title,
+            link:  "{{$smarty.const.APP_DOMAIN}}mall/news/details/id/" + nid,
+            imgUrl: '{{$data.n_cover}}',
+            trigger: function (res) {
+            },
+            success: function (res) {
+                getShareBack();
+            },
+            cancel: function (res) {
+            },
+            fail: function (res) {
+            }
+        });
+
+        wx.onMenuShareQQ({
+            title: main_title,
+            desc:  title,
+            link:  "{{$smarty.const.APP_DOMAIN}}mall/news/details/id/" + nid,
+            imgUrl: '{{$data.n_cover}}',
+            trigger: function (res) {
+            },
+            success: function (res) {
+                getShareBack();
+            },
+            cancel: function (res) {
+            },
+            fail: function (res) {
+            }
+        });
+    });
+
+    //分享回调数据
+    function getShareBack(){
+        //分享完成 回调数据
+    }
+</script>
+</body>
+</html>

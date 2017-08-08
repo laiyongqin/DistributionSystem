@@ -1,0 +1,31 @@
+{{include file="common/header.html"}}
+
+<div class="main">
+    {{include file="common/menu.html"}}
+
+    <div id="right">
+        <!--面包屑导航-->
+        <ol class="breadcrumb">
+            <li><a href="/">管理首页 </a></li>
+            <li class="active">{{$breadTitle}}</li>
+        </ol>
+
+        <div class="right_con">
+            <div class="list_show">
+                <div class="title">
+                    <h4>{{$detail.n_title}}</h4>
+                    <div class="time">{{$detail.n_addtime}} <a href="/help/index">返回列表</a></div>
+                </div>
+                <div class="con">
+                    {{$detail.n_content}}
+                </div>
+            </div>
+        </div>
+
+        <!--弹窗区域-->
+        {{include file="index/modal.html"}}
+    </div>
+    <div class="clear"></div>
+</div>
+
+{{include file="common/footer.html"}}

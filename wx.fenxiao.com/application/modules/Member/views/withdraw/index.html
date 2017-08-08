@@ -1,0 +1,144 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>提现</title>
+    <link rel="stylesheet" type="text/css" href="/public/css/style.min.css">
+    <link rel="stylesheet" type="text/css" href="/public/css/dropload.min.css">
+</head>
+<style>
+    .dropload-down{position: absolute;bottom:-13vw; width:200px;margin:0 0 0 -100px;left:50%;text-align: center;}
+    #cash_list{position: relative;}
+</style>
+<body>
+{{include file="application/views/common/footer.html"}}
+
+<div class="member-header">
+    <a class="set" href="/member/profile/index"><i class="icon iconfont">&#xe73a;</i></a>
+    <i class="shadow"></i>
+    <div class="user">
+        <div class="img">
+            <p>{{$userData.m_nickname}}</p>
+            <img src="{{$userData.m_avatar}}"></div>
+    </div>
+</div>
+
+<div class="cash">
+    <ul>
+        <li><i class="icon iconfont">&#xe785;</i><span>提现金额：</span><input name="pw_money" type="number" placeholder="可提现的金额{{$wealth}}元"></li>
+    </ul>
+    <input type="hidden" name="m_id" value="{{$userData.m_id}}">
+    <input type="button" class="btn" id="btn" value="确定提交">
+</div>
+
+<div class="cash-form">
+    <div class="title">
+        <span>编号</span>
+        <span>金额</span>
+        <span>状态</span>
+    </div>
+    <ul id="cash_list">
+        {{if $data}}
+        {{foreach from=$data item=v}}
+        <li>
+            <span>{{$v.pw_id}}</span>
+            <span>{{$v.pw_money}}</span>
+            {{if $v.pw_status==1}}
+            <span class="zt2">进行中...</span>
+            {{elseif $v.pw_status==2}}
+            <span class="zt1">提现成功</span>
+            {{elseif $v.pw_status==3}}
+            <span class="zt3">提现失败</span>
+            {{/if}}
+        </li>
+        {{/foreach}}
+        {{/if}}
+    </ul>
+    <p class="down"></p>
+</div>
+
+<script src="/public/js/jquery-2.1.4.js"></script>
+<script src="/public/js/jquery-weui.js"></script>
+<script src="/public/js/dropload.js"></script>
+<script>
+    $(document).ready(function(){
+        $('#btn').click(function () {
+            var pw_money = $("input[name='pw_money']").val();
+            var m_id     = $("input[name='m_id']").val();
+            if(pw_money==''){
+                $.alert('提现金额不能为空');
+                return;
+            }
+
+            //提交申请
+            $.ajax({
+                type : 'POST',
+                url  : "/ajax/cash/save/",
+                data : {action:"cash", m_id:m_id, pw_money:pw_money},
+                async: false,
+                dataType: "json",
+                error: function(request) {
+                    $.alert("提交错误,请重试");
+                },
+                success: function(data) {
+                    if(data.status == 'y'){
+                        $.alert(data.info);
+                        setTimeout("location.reload()", 1000);
+                    }else{
+                        $.alert(data.info);
+                    }
+                }
+            })
+
+        })
+
+        $(function () {
+            //下拉加载
+            var page = 2;
+            var total    = parseInt('{{$total}}');
+            var pageSize = parseInt('{{$pageSize}}');
+            var mid      = parseInt('{{$userData.m_id}}');
+            var type      = parseInt('{{$type}}');
+            if(total >= pageSize) {
+                $("#cash_list").dropload({
+                    domDown : {// 下方DOM
+                        domClass   : 'dropload-down',
+                        domRefresh : '<div class="dropload-refresh">↑上拉加载更多</div>',
+                        domLoad    : '<div class="dropload-load"><span class="loading"></span>加载中...</div>',
+                        domNoData  : '<div class="dropload-noData">没有啦╮(╯_╰)╭</div>'
+                    },
+                    scrollArea : window,
+                    loadDownFn : function(me){
+
+                        $.ajax({
+                            type: 'GET',
+                            url : "/member/withdraw/index/?type=load&page=" + page + '&mid=' + mid,
+                            dataType: 'html',
+                            success: function(data){
+                                if(data) {
+                                    //赋值数据
+                                    $("#cash_list").append(data);
+                                    page++;
+                                } else {
+                                    // 锁定
+                                    me.lock();
+                                    // 无数据
+                                    me.noData();
+                                }
+                                // 每次数据加载完，必须重置
+                                me.resetload();
+                            },
+                            error: function(xhr, type){
+                                // 即使加载出错，也得重置
+                                me.resetload();
+                            }
+                        });
+                    }
+                });
+            }
+        })
+    })
+</script>
+</body>
+</html>

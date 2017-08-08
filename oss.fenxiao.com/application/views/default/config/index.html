@@ -1,0 +1,170 @@
+{{include file="common/header.html"}}
+
+<div class="main">
+    {{include file="common/menu.html"}}
+
+    <div id="right">
+        <!--面包屑导航-->
+        <ol class="breadcrumb">
+            <li><a href="javascript:void(0);">系统管理 </a></li>
+            <li class="active">配置管理</li>
+        </ol>
+
+        <div class="right_con">
+            <div class="tabbable" >
+                <ul class="nav nav-tabs">
+                    {{foreach from=$typeList key=key item=vo}}
+                    <li {{if $tid==$key}}class="active"{{/if}}><a href="/config/index?tid={{$key}}" >{{$vo}}</a></li>
+                    {{/foreach}}
+                </ul>
+                <div class="tab-content">
+                    <form class="form-horizontal" id="form-save" action="/config/save/">
+                        <div class="tab-pane active" id="basic_right" style="padding-top: 50px;">
+                            {{if $tid==1}}
+                            <input type="hidden" name="id_{{$data[0].bc_id}}" value="{{$data[0].bc_id}}" />
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{$data[0].bc_title}}</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" name="bc_value_{{$data[0].bc_id}}" value="{{$data[0].bc_value}}" placeholder="内容" datatype="*" nullmsg="请填写名称"/>
+                                </div>
+                            </div>
+                            <input type="hidden" name="id_{{$data[1].bc_id}}" value="{{$data[1].bc_id}}" />
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{$data[1].bc_title}}</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" name="bc_value_{{$data[1].bc_id}}" value="{{$data[1].bc_value}}" placeholder="内容" datatype="*" nullmsg="请填写名称"/>
+                                </div>
+                            </div>
+
+                            <input type="hidden" name="id_{{$data[2].bc_id}}" value="{{$data[2].bc_id}}" />
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{$data[2].bc_title}}</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" name="bc_value_{{$data[2].bc_id}}" value="{{$data[2].bc_value}}" placeholder="内容" datatype="*" nullmsg="请填写名称"/>
+                                </div>
+                            </div>
+
+                            <input type="hidden" name="id_{{$data[3].bc_id}}" value="{{$data[3].bc_id}}" />
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{$data[3].bc_title}}</label>
+                                <div class="col-sm-6">
+                                    <textarea class="form-control" name="bc_value_{{$data[3].bc_id}}" placeholder="内容" datatype="*" nullmsg="请填写名称" style="height:100px;" >{{$data[3].bc_value}}</textarea>
+                                </div>
+                            </div>
+
+                            <input type="hidden" name="id_{{$data[4].bc_id}}" value="{{$data[4].bc_id}}" />
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{$data[4].bc_title}}</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" name="bc_value_{{$data[4].bc_id}}" value="{{$data[4].bc_value}}" placeholder="内容" datatype="*" nullmsg="请填写名称"/>
+                                </div>
+                            </div>
+                            {{/if}}
+                            {{if $tid==2}}
+                            <input type="hidden" name="id_{{$data[0].bc_id}}" value="{{$data[0].bc_id}}" />
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{$data[0].bc_title}}</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" name="bc_value_{{$data[0].bc_id}}" value="{{$data[0].bc_value}}" placeholder="内容" datatype="*" nullmsg="请填写名称"/>
+                                </div>
+                            </div>
+                            {{/if}}
+                            {{if $tid==4}}
+                            <input type="hidden" name="id_{{$data[0].bc_id}}" value="{{$data[0].bc_id}}" />
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{$data[0].bc_title}}</label>
+                                <div class="col-sm-1">
+                                    <input type="text" class="form-control" name="bc_value_{{$data[0].bc_id}}" value="{{$data[0].bc_value}}" placeholder="内容" datatype="*" nullmsg="请填写名称"/>
+                                </div>
+                                <label class="col-sm-1 control-label">单位:(小时)</label>
+                            </div>
+                            <input type="hidden" name="id_{{$data[1].bc_id}}" value="{{$data[1].bc_id}}" />
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{$data[1].bc_title}}</label>
+                                <div class="col-sm-1">
+                                    <input type="text" class="form-control" name="bc_value_{{$data[1].bc_id}}" value="{{$data[1].bc_value}}" placeholder="内容" datatype="*" nullmsg="请填写名称"/>
+                                </div>
+                                <label class="col-sm-1 control-label"></label>
+                            </div>
+                            {{/if}}
+                            {{if $tid==5}}
+                            <input type="hidden" name="id_{{$data[0].bc_id}}" value="{{$data[0].bc_id}}" />
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{$data[0].bc_title}}</label>
+                                <div class="col-sm-1">
+                                    <input type="text" class="form-control" name="bc_value_{{$data[0].bc_id}}" value="{{$data[0].bc_value}}" placeholder="内容" datatype="*" nullmsg="请填写名称"/>
+                                </div>
+                                <label class="col-sm-1 control-label">单位:(天)</label>
+                            </div>
+                            {{/if}}
+                            {{if $tid==6}}
+                            <input type="hidden" name="id_{{$data[0].bc_id}}" value="{{$data[0].bc_id}}" />
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{$data[0].bc_title}}</label>
+                                <div class="col-sm-1">
+                                    <input type="text" class="form-control" name="bc_value_{{$data[0].bc_id}}" value="{{$data[0].bc_value}}" placeholder="内容" datatype="*" nullmsg="请填写名称"/>
+                                </div>
+                                <label class="col-sm-1 control-label">单位:(元)</label>
+                            </div>
+                            <input type="hidden" name="id_{{$data[1].bc_id}}" value="{{$data[1].bc_id}}" />
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{$data[1].bc_title}}</label>
+                                <div class="col-sm-1">
+                                    <input type="text" class="form-control" name="bc_value_{{$data[1].bc_id}}" value="{{$data[1].bc_value}}" placeholder="内容" datatype="*" nullmsg="请填写名称"/>
+                                </div>
+                                <label class="col-sm-1 control-label">单位:(次数)</label>
+                            </div>
+
+                            <!--<input type="hidden" name="id_{{$data[2].bc_id}}" value="{{$data[2].bc_id}}" />-->
+                            <!--<div class="form-group">-->
+                                <!--<label class="col-sm-2 control-label">{{$data[2].bc_title}}</label>-->
+                                <!--<div class="col-sm-1">-->
+                                    <!--<input type="text" class="form-control" name="bc_value_{{$data[2].bc_id}}" value="{{$data[2].bc_value}}" placeholder="内容" datatype="*" nullmsg="请填写名称"/>-->
+                                <!--</div>-->
+                                <!--<label class="col-sm-1 control-label">单位:(元)</label>-->
+                            <!--</div>-->
+                            <input type="hidden" name="id_{{$data[3].bc_id}}" value="{{$data[3].bc_id}}" />
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{$data[3].bc_title}}</label>
+                                <div class="col-sm-1">
+                                    <input type="text" class="form-control" name="bc_value_{{$data[3].bc_id}}" value="{{$data[3].bc_value}}" placeholder="内容" datatype="*" nullmsg="请填写名称"/>
+                                </div>
+                                <label class="col-sm-1 control-label">单位:(元)</label>
+                            </div>
+                            {{/if}}
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"></label>
+                            <div class="col-sm-4">
+                                <button class="btn btn-primary" type="submit">保存</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+</div>
+
+<script>
+    $("#form-save").Validform({
+        ajaxPost: true,
+        tipSweep: true,
+        tiptype:function(msg,o,cssctl){
+            if(o.type == 3)
+                $.dialog.tips(msg);
+        },
+        beforeSubmit:function(curform){
+        },
+        callback:function(response){
+            $.dialog.tips(response.info);
+            if ( response.status == 'y' ) {
+                window.setTimeout(function(){
+                    location.reload();
+                }, 2000)
+            }
+        }
+    });
+</script>
+{{include file="common/footer.html"}}

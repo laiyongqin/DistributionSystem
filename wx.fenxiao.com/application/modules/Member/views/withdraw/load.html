@@ -1,0 +1,15 @@
+{{if $data}}
+{{foreach from=$data item=v}}
+<li>
+    <span>{{$v.pw_id}}</span>
+    <span>{{$v.pw_money}}</span>
+    {{if $v.pw_status==1}}
+    <span class="zt2">进行中...</span>
+    {{elseif $v.pw_status==2}}
+    <span class="zt1">提现成功</span>
+    {{elseif $v.pw_status==3}}
+    <span class="zt3">提现失败</span>
+    {{/if}}
+</li>
+{{/foreach}}
+{{/if}}

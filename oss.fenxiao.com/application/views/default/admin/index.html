@@ -1,0 +1,88 @@
+{{include file="common/header.html"}}
+
+<div class="main">
+    {{include file="common/menu.html"}}
+
+    <div id="right">
+        <!--面包屑导航-->
+        <ol class="breadcrumb">
+            <li><a href="javascript:void(0);">系统管理</a></li>
+            <!--<li><a href="/admin/index/">帐号管理</a></li>-->
+            <li class="active">系统管理员列表</li>
+        </ol>
+
+        <div class="right_con">
+            <!--搜索区域-->
+            <form class="form-inline pull-left">
+                <div class="form-group">
+                    <input type="text" name="name" value="{{$name}}" class="form-control" placeholder="用户名">
+                </div>
+                <button type="submit" class="btn btn-default">搜索</button>
+            </form>
+            <button type="button" class="btn btn-default pull-right" onclick="window.location.reload();">刷新界面</button>
+            <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#adminModal" href="/admin/form/">添加管理员</button>
+
+            <div class="clear10"></div>
+
+            <!-- 表格 -->
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <th>用户名</th>
+                    <th>角色</th>
+                    <th>真实姓名</th>
+                    <th>联系电话</th>
+                    <th>状态</th>
+                    <th>添加时间</th>
+                    <th>最后登录时间</th>
+                    {{if $smarty.const.A_ROLE == 1}}<td>修改密码</td>{{/if}}
+                    <th>操作</th>
+                </tr>
+                {{if $data}}
+                {{foreach from=$data item=row}}
+                <tr>
+                    <td>{{$row.a_username}}</td>
+                    <td>{{if $row.a_role==1}}<span class="label label-danger">{{if $row.a_id == $smarty.const.A_ID}}当前{{/if}}系统管理员</span>{{else}}<span class="label label-info">普通管理员</span>{{/if}}</td>
+                    <td>{{$row.a_realname}}</td>
+                     <td>{{$row.a_phone}}</td>
+                    <td>
+                        <a href="#" data-json="确认要更改状态吗？" data-href="/ajax/admin/status/id/{{$row.a_id}}/status/{{$row.a_status}}">
+                            <i class="glyphicon {{if $row.a_status == 1}}glyphicon-eye-open{{else}}glyphicon-eye-close{{/if}}" title="{{if $row.a_status == 2}}禁用{{else}}正常{{/if}}"></i>
+                            {{if $row.a_status == 1}}<span class="label label-success">正常</span>{{else}}<span class="label label-warning">禁用</span>{{/if}}
+                        </a>
+                    </td>
+                    <td>{{$row.a_addtime}}</td>
+                    <td>{{$row.a_login_time}}</td>
+                    {{if $smarty.const.A_ROLE == 1}}
+                    <td>
+                        <a data-toggle="modal" href="{{$baseUrl}}formPassword/id/{{$row.a_id}}" data-target="#formPasswordModal" title="修改密码"><i class="glyphicon glyphicon-lock"></i></a>
+                    </td>
+                    {{/if}}
+                    <td>
+                        <a class="glyphicon glyphicon-edit" data-toggle="modal" data-target="#adminModal" href="{{$baseUrl}}/form/id/{{$row.a_id}}" title="编辑管理员"></a>&nbsp;&nbsp;
+                    </td>
+                </tr>
+                {{/foreach}}
+                {{/if}}
+            </table>
+
+            <!-- 分页 -->
+            {{if $data}}
+            <nav>
+                <ul class="pagination pull-right">{{$page}}</ul>
+            </nav>
+            {{/if}}
+        </div>
+
+        <!--弹窗-->
+        <form class="form-horizontal" action="/ajax/admin/save/" method="post">
+            <div class="modal fade" id="adminModal" tabindex="-1" role="dialog"></div>
+        </form>
+
+        <form class="form-horizontal" method="post" action="/ajax/admin/editPassword/" >
+            <div class="modal fade" id="formPasswordModal" tabindex="-1" role="dialog"></div>
+        </form>
+    </div>
+    <div class="clear"></div>
+</div>
+
+{{include file="common/footer.html"}}

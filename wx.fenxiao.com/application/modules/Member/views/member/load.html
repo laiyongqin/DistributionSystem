@@ -1,0 +1,13 @@
+{{if $promoterList}}
+{{foreach from=$promoterList item=v}}
+<li>
+    <img src="{{$smarty.const.IMAGE_URL}}{{$v.m_avatar}}" width="185" height="185">
+    <div class="text">
+        <p>昵称：{{$v.m_nickname}}</p>
+        <p>会员：{{if $v.m_vip==2}}是{{else}}否{{/if}}</p>
+        <p>关注时间：{{$v.m_addtime}}</p>
+        <p>会员ID：{{$v.sp_spokesman}}</p>
+    </div>
+</li>
+{{/foreach}}
+{{/if}}

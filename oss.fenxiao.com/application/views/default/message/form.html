@@ -1,0 +1,50 @@
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="passportModalLabel">客服消息中心</h4>
+        </div>
+        <input type="hidden" name="id" value="{{$row.wm_id}}" />
+        <div class="modal-body">
+            <div class="alert alert-dismissible" role="alert" style="display: none;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong></strong>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">键值</label>
+                <div class="col-sm-6">
+                    <input type="text" name="wm_key" class="form-control" value="{{$row.wm_key}}" placeholder="键值" datatype="*" nullmsg="请填写键值" />
+                </div>
+                <span class="help-inline" style="color:red;">*</span>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">标题</label>
+                <div class="col-sm-6">
+                    <input type="text" name="wm_title" class="form-control" value="{{$row.wm_title}}" placeholder="标题" datatype="*" nullmsg="请填写标题" />
+                </div>
+                <span class="help-inline" style="color:red;">*</span>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">模板内容</label>
+                <div class="col-sm-6">
+                    <textarea name="wm_content" id="wm_content" style="width:400px;height:150px;">{{$row.wm_content}}</textarea>
+                </div>
+                <span class="help-inline" style="color:red;">*</span>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">状态</label>
+                <div class="col-sm-6">
+                    <select name="wm_status" id="wm_status" datatype="*" nullmsg="请选择状态" class="form-control">
+                        {{$statusOption}}
+                    </select>
+                </div>
+                <span class="help-inline" style="color:red;">*</span>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="submit" class="btn btn-primary btn-submit">确认修改</button>
+        </div>
+    </div>
+</div>

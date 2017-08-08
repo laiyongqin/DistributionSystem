@@ -1,0 +1,66 @@
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="passportModalLabel">{{if $row.m_id}}编辑菜单{{else}}添加菜单{{/if}}</h4>
+        </div>
+        <input type="hidden" name="id" value="{{$row.m_id}}" />
+        <div class="modal-body">
+            <div class="alert alert-dismissible" role="alert" style="display: none;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong></strong>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">一级菜单</label>
+                <div class="col-sm-6">
+                    <select id="menuEdit" name="menuEdit" class="form-control">
+                        <option value="0">请选择菜单</option>
+                        {{foreach from=$topList key=m_id item=top}}
+                        <option value="{{$top.m_id}}">+{{$top.m_name}}</option>
+                        {{foreach from=$menuList.$m_id.son item=son}}
+                        <option value="{{$son.m_id}}">&nbsp;&nbsp;&nbsp;&nbsp;{{$son.m_name}}</option>
+                        {{/foreach}}
+                        {{/foreach}}
+                    </select>
+                </div>
+                <span class="help-inline" style="color:red;">*</span>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">菜单名</label>
+                <div class="col-sm-6">
+                    <input type="text" name="name" value="{{$row.m_name}}" placeholder="菜单名" class="form-control">
+                </div>
+                <span class="help-inline" style="color:red;">*</span>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">菜单URL</label>
+                <div class="col-sm-6">
+                    <input type="text" name="url" placeholder="菜单URL" value="{{$row.m_url}}" datatype="*" nullmsg="请填写菜单URL" class="form-control"/>
+                </div>
+                <span class="help-inline" style="color:red;">*</span>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">菜单标记</label>
+                <div class="col-sm-6">
+                    <input type="text" name="tag" placeholder="菜单标记" value="{{$row.m_tag}}" datatype="*" nullmsg="请填写菜单标记" class="form-control"/>
+                </div>
+                <span class="help-inline" style="color:red;">*</span>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">排序</label>
+                <div class="col-sm-6">
+                    <input type="text" name="order" placeholder="菜单排序" value="{{$row.m_order}}" datatype="n" nullmsg="请填写菜单排序" class="form-control"/>
+                </div>
+                <span class="help-inline" style="color:red;">*</span>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="submit" class="btn btn-primary btn-submit">确认修改</button>
+        </div>
+    </div>
+    <script>
+        $("#menuEdit").val("{{$row.m_parent_id}}");
+    </script>
+</div>

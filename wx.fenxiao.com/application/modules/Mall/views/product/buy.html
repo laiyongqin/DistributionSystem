@@ -1,0 +1,177 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>立即购买</title>
+    <link rel="stylesheet" type="text/css" href="/public/js/weui/weui.min.css">
+    <link rel="stylesheet" type="text/css" href="/public/js/weui/jquery-weui.min.css">
+    <link rel="stylesheet" type="text/css" href="/public/css/style.min.css">
+    <link rel="stylesheet" type="text/css" href="/public/css/iconfont.css">
+</head>
+
+
+<body style="padding-bottom:4vw;">
+
+<div class="pay">
+    <img src="{{$data.p_cover}}">
+    <div class="title">{{$data.p_title}}</div>
+
+    <form id="buyForm">
+        <input type="hidden" name="p_id" id="p_id" value="{{$data.p_id}}">
+        <input type="hidden" name="price" id="price" value="{{$price}}">
+        <input type="hidden" name="ppList" id="ppList" value="{{$ppids}}">
+        <!--<div class="title">今日限购剩余：<span>24</span>份</div>-->
+        <div class="pay-form">
+            <ul>
+                <li><i>*</i><span>购买数量：</span><input type="text" name="num" maxlength="value" class="spinner" readonly/></li>
+                <li><i>*</i><span>联系人：</span><input type="text" name="realname" id="realname" value="{{$address.a_realname}}"></li>
+                <li><i>*</i><span>联系电话：</span><input type="number" name="phone" id="phone" value="{{$address.a_phone}}"></li>
+                <li><i>*</i><span>微信号：</span><input type="text" name="wechat" id="wechat" value="{{$address.a_wechat_id}}"></li>
+
+                <li id="city"><i>*</i><span>所在地区：</span>
+                    <div class="select-box">
+
+                        <div class="select">
+                            <i class="icon iconfont">&#xe61d;</i>
+                            <select class="prov" name="prov" ></select>
+                        </div>
+
+                        <div class="select">
+                            <i class="icon iconfont">&#xe61d;</i>
+                            <select class="city" name="city" disabled="disabled"></select>
+                        </div>
+
+                        <div class="select">
+                            <i class="icon iconfont">&#xe61d;</i>
+                            <select class="dist" name="dist" disabled="disabled"></select>
+                        </div>
+
+                    </div>
+
+                </li>
+
+                <li><i>*</i><span>联系地址：</span><textarea name="address" id="address">{{$address.a_address}}</textarea></li>
+                {{if $ppList}}
+                    {{foreach from=$ppList key=key item=vo}}
+                        <li><span>{{$ppType[$key]}}：</span>
+                            {{foreach from=$vo key=k item=v}}
+                                <a {{if $k == 0}}class="on"{{/if}} pp_id="{{$v.pp_id}}" >{{$v.pp_name}}</a>
+                            {{/foreach}}
+                        </li>
+                    {{/foreach}}
+                {{/if}}
+
+                <li><span>备注：</span><textarea name="remark" id="remark"></textarea></li>
+            </ul>
+            <div class="title">已选：<span id="num">1</span>份　共计：￥<span id="total">{{$price}}</span>元</div>
+            <input type="button" class="btn" value="立即购买" id="buyBtn">
+        </div>
+        </form>
+</div>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.1.0.js"></script>
+<script src="/public/js/jquery-2.1.4.js"></script>
+<script src="/public/js/city/city.min.js"></script>
+<script src="/public/js/city/jquery.cityselect.js"></script>
+<script src="/public/js/jquery.spinner.js"></script>
+<script src="/public/js/weui/jquery-weui.js"></script>
+<script>
+
+    var appId     = '{{$signPackage.appId}}';var timestamp = '{{$signPackage.timestamp}}';
+    var nonceStr  = '{{$signPackage.nonceStr}}';var signature = '{{$signPackage.signature}}';
+
+    $(document).ready(function(){
+        wx.config({
+            debug : false,
+            appId: appId,
+            timestamp:timestamp,
+            nonceStr: nonceStr,
+            signature: signature,
+            jsApiList: [
+                'checkJsApi',
+                'onMenuShareTimeline',
+                'openAddress'
+            ]
+        });
+
+        var hasAddress = '{{$hasAddress}}';
+        if(hasAddress == 0) {
+            wx.ready(function () {
+                wx.openAddress({
+                    success: function (res) {
+                        var userName     = res.userName;
+                        var telNumber    = res.telNumber;
+                        var provinceName = res.provinceName;
+                        var city         = res.cityName;
+                        var detailInfo = res.detailInfo;
+
+                        $('#realname').val(userName);
+                        $('#phone').val(telNumber);
+                        $('#address').val(detailInfo);
+
+                        //城市联动
+                        $.citySelect({
+                            obj: $('#city'),
+                            prov:provinceName.slice(0,-1),
+                            city:city.substr(0,-1),
+                            nodata:"none"
+                        });
+                    }
+                });
+            });
+        } else {
+            //城市联动
+            $.citySelect({
+                obj: $('#city'),
+                prov:"{{$address.a_province}}",
+                city:"{{$address.a_city}}",
+                dist:"{{$address.a_area}}",
+                nodata:"none"
+            });
+        }
+
+
+        $('#buyBtn').click(function(){
+            $.ajax({
+                type: 'POST',
+                url : "/ajax/product/buy",
+                data : $('#buyForm').serialize(),
+                dataType: 'json',
+                success: function(data){
+                    if(data.status == 'y'){
+                        location.href = '/payment/order/orderNo/' + data.info.orderNo;
+                    }else{
+                        $.alert(data.info);
+                    }
+                }
+            });
+        });
+
+        $('.spinner').spinner({
+            value:1,
+            min : 1,
+            target : 'productPrice'
+        });
+
+        $(".pay-form ul li a").click(function(){
+            $(this).siblings().removeClass('on');
+            $(this).addClass('on');
+            var ppids = [];
+            $(".pay-form ul li a").each(function(){
+                if($(this).hasClass('on')){
+                     ppids.push($(this).attr('pp_id'));
+                }
+            });
+
+            $('#ppList').val(ppids.join(','));
+        });
+    });
+
+    function changeSpinner(target, val){
+        var p = $('#price').val();
+        $('#num').html(val);
+        $('#total').html((val * p).toFixed(2));
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="passportModalLabel">{{if $id}}修改用户{{else}}添加用户{{/if}}</h4>
+        </div>
+        <input type="hidden" name="id" value="{{$id}}" />
+        <div class="modal-body">
+            <div class="alert alert-dismissible" role="alert" style="display: none;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong></strong>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">登录名</label>
+                <div class="col-sm-6">
+                    <input type="text" name="m_username" class="form-control" value="{{$username}}" placeholder="用户名" datatype="s" nullmsg="请填写登录名"  />
+                </div>
+                <span class="help-inline" style="color:red;">*</span>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">姓名</label>
+                <div class="col-sm-6">
+                    <input type="text" name="m_realname" class="form-control" value="{{$realname}}" placeholder="姓名" datatype="*" nullmsg="请填写姓名"  />
+                </div>
+                <span class="help-inline" style="color:red;">*</span>
+            </div>
+            {{if !$id}}
+            <div class="form-group">
+                <label class="col-sm-2 control-label">密码</label>
+                <div class="col-sm-6">
+                    <input type="password" name="m_password" class="form-control" value="" placeholder="登录密码" datatype="*6-18" nullmsg="请填写密码" />
+                </div>
+                <span class="help-inline" style="color:red;">*</span>
+            </div>
+            {{/if}}
+            <div class="form-group">
+                <label class="col-sm-2 control-label">用户等级</label>
+                <div class="col-sm-4">
+                    <select name="m_vip" datatype="*" null="请选择用户等级" class="form-control">
+                        {{$vipOption}}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">用户状态</label>
+                <div class="col-sm-4">
+                    <select name="m_status" datatype="*" null="请选择状态" class="form-control">
+                        {{$statusOption}}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="submit" class="btn btn-primary btn-submit">确认修改</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>新闻资讯</title>
+    <link rel="stylesheet" type="text/css" href="/public/css/dropload.min.css">
+    <link rel="stylesheet" type="text/css" href="/public/css/swiper.min.css">
+    <link rel="stylesheet" type="text/css" href="/public/css/style.min.css">
+</head>
+
+<body>
+{{include file="application/views/common/footer.html"}}
+<!-- banner -->
+<div class="swiper-container banner">
+    <div class="swiper-wrapper">
+        {{if $adList}}
+        {{foreach from=$adList item=vo}}
+        <div class="swiper-slide"><a href="{{$vo.a_link}}"><img src="{{$vo.a_picture}}"></a></div>
+        {{/foreach}}
+        {{/if}}
+    </div>
+    <!-- Add Pagination -->
+    <div class="swiper-pagination"></div>
+</div>
+<!-- menu -->
+<div class="menu">
+    {{if $cateList}}
+    {{foreach from=$cateList key=key item=v}}
+    <a {{if $v.nc_alias==$alias}}class="on"{{/if}} href="/mall/news/index?alias={{$v.nc_alias}}">{{$v.nc_name}}</a>
+    {{/foreach}}
+    {{/if}}
+</div>
+
+<div class="news-list">
+    <ul id="newsList">
+        {{if $allData}}
+        {{foreach from=$allData item=vo}}
+        <li><a href="/mall/news/details/id/{{$vo.n_id}}"><i class="icon iconfont">&#xe78f;</i>{{$vo.n_title}}</a></li>
+        {{/foreach}}
+        {{/if}}
+    </ul>
+</div>
+
+
+<script src="/public/js/jquery-2.1.4.js"></script>
+<script src="/public/js/swiper.jquery.min.js"></script>
+<script src="/public/js/dropload.js"></script>
+<script src="/public/js/weui/jquery-weui.js"></script>
+<script>
+
+    var swiper = new Swiper('.swiper-container', {
+        pagination: '.swiper-pagination',
+        nextButton: '.swiper-button-next',
+        prevButton: '.swiper-button-prev',
+        paginationClickable: true,
+        spaceBetween: 30,
+        centeredSlides: true,
+        autoplay: 5000,
+        autoplayDisableOnInteraction: false
+    });
+
+    $(document).ready(function(){
+        var page = 2;
+        var total = parseInt('{{$total}}');
+        var pageSize = parseInt('{{$pageSize}}');
+        if(total >= pageSize) {
+            $("#list").dropload({
+                domDown : {                                                          // 下方DOM
+                    domClass   : 'dropload-down',
+                    domRefresh : '<div class="dropload-refresh">↑上拉加载更多</div>',
+                    domLoad    : '<div class="dropload-load"><span class="loading"></span>加载中...</div>',
+                    domNoData  : '<div class="dropload-noData">没有啦╮(╯_╰)╭</div>'
+                },
+                scrollArea : window,
+                loadDownFn : function(me){
+                    $.ajax({
+                        type: 'GET',
+                        url : "/mall/news/index/page/" + page  + '/?type=load&alias={{$alias}}',
+                        dataType: 'html',
+                        success: function(data){
+                            if(data) {
+                                //赋值数据
+                                $("#newsList").append(data);
+                                page++;
+                            } else {
+                                // 锁定
+                                me.lock();
+                                // 无数据
+                                me.noData();
+                                $('.dropload-noData').hide();
+                                $('.dropload-refresh').hide();
+                            }
+                            // 每次数据加载完，必须重置
+                            me.resetload();
+                        },
+                        error: function(xhr, type){
+                            // 即使加载出错，也得重置
+                            me.resetload();
+                        }
+                    });
+                }
+            });
+        }
+    })
+</script>
+</body>
+</html>

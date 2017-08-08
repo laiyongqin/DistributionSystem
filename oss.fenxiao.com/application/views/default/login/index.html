@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{$pageTitle}}</title>
+    <link  rel="stylesheet" type="text/css" href="/public/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/public/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/public/css/plugs.css">
+    <script src="/public/js/jquery.12.0.js"></script>
+    <script src="/public/js/bootstrap.min.js"></script>
+    <script src="/public/js/Headroom.js"></script>
+    <script src="/public/js/Validform_v5.3.2_min.js"></script>
+    <script src="/public/js/jquery.artDialog-4.1.7.min.js"></script>
+    <!--[if lt IE 9]>
+    <script src="/public/js/jQuery v1.12.0.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body style="background:#191919;">
+
+<div class="login_logo"></div>
+
+<div class="login_con">
+    <form action="/login/passport/" class="form-process">
+        <input type="hidden" name="token" value="{{$token}}" />
+        <div class="input-group input-group">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+            <input type="text" class="form-control" name="username" placeholder="请输入您的用户名" aria-describedby="sizing-addon2" datatype="*" nullmsg="请输入登录用户名" />
+        </div>
+        <div class="input-group input-group">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+            <input type="password" class="form-control" name="password" placeholder="请输入您的登录密码" aria-describedby="sizing-addon2" datatype="*" nullmsg="请输入登录密码" />
+        </div>
+        <div class="input-group input-group">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-picture"></i></span>
+            <input type="text" class="form-control"  name="code" placeholder="请输入验证码" aria-describedby="sizing-addon2" datatype="*" nullmsg="请输入验证码" />
+            <img style=" position: absolute; top: 2px; z-index: 9;  right: 103px;
+" id="verifyImg" src="/login/code/" title="验证码" />
+            <a style=" position: absolute; z-index: 9; width: 100px; right: -8px; line-height: 33px; font-size: 12px;"href="javascript:;" id="refreshCode"><span>看不清，换一张</span></a>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn btn-block">登录系统</button>
+    </form>
+    <p>Copyright © 2016-2017 福州华闽易家网络科技有限公司. All Rights Reserved </p>
+</div>
+<script type="application/javascript">
+    $(function(){
+        $('#refreshCode').click(function(){
+            var src = "/login/code/?t=" + Math.random();
+            $('#verifyImg').attr('src', src);
+        });
+    });
+
+    $(".form-process").Validform({
+        btnSubmit: '.btn',
+        ajaxPost: true,
+        tipSweep: true,
+        tiptype:function(msg,o,cssctl){
+            if(o.type == 3) {
+                $.dialog.tips(msg);
+            }
+
+        },
+        callback:function(json){
+            $.dialog.tips(json.info);
+            if ( json.status == 'y' ) {
+                window.location.href = '/';
+            }
+            return false;
+        }
+    });
+</script>
+</body>
+</html>

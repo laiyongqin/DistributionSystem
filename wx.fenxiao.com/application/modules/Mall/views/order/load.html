@@ -1,0 +1,35 @@
+{{if $allData}}
+{{foreach from=$allData item=vo}}
+<li id="li_{{$vo.o_order_no}}">
+    订单编号:{{$vo.o_order_no}}<i class="icon iconfont">&#xe772;</i>
+    <div class="con">
+        <div class="hang"><strong>订单金额：</strong>{{$vo.o_payment_amount}}元</div>
+        <div class="hang"><strong>订单时间：</strong>{{$vo.o_addtime}}</div>
+        <div class="hang"><strong>支付状态：</strong>{{$payStatus[$vo.o_pay_status]}}</div>
+        <div class="hang"><strong>订单状态：</strong>{{$orderStatus[$vo.o_order_status]}}</div>
+        <div class="hang"><strong>商品名称：</strong>{{$vo.p_title}}</div>
+        <div class="hang"><strong>订单详情：</strong>{{$vo.pp_title}}</div>
+        <!--{{if $vo.pp_title}}<p><strong>订单详情：</strong>{{$vo.pp_title}}</p>{{/if}}-->
+        {{if $vo.o_pay_status == 3}}
+        <div class="hang"><strong>快递公司：</strong>{{$vo.o_express_company}}</div>
+        <div class="hang"><strong>快递单号：</strong>{{$vo.o_express_number}}</div>
+        {{/if}}
+        {{if $vo.o_express_number}}
+        <p class="express_name"><a href="/mall/order/express?id={{$vo.o_id}}">查看物流信息</a></p>
+        {{/if}}
+        {{if $vo.o_pay_status == 1}}
+        <div class="hang"><strong>剩余支付时间：</strong><div class="yomibox" data="{{$vo.leftTime}}"></div><span class="end">已过期</span></div>
+        {{/if}}
+        <div class="btn" id="{{$vo.o_order_no}}">
+            {{if $vo.o_pay_status == 1 && $vo.leftTime > 0}}
+            <input name="" type="button" value="立即支付" id="repayBtn" orderID="{{$vo.o_order_no}}">
+            <input name="" type="button" value="取消订单" id="cancelBtn" orderID="{{$vo.o_order_no}}">
+            {{/if}}
+            {{if $vo.o_pay_status == 3 && $vo.o_order_status != 3}}
+            <input name="" type="button" value="确认收货" id="confirmBtn" orderID="{{$vo.o_order_no}}">
+            {{/if}}
+        </div>
+    </div>
+</li>
+{{/foreach}}
+{{/if}}

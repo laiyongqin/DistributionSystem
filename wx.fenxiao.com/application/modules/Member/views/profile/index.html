@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>{{$pageTitle}}</title>
+    <link rel="stylesheet" type="text/css" href="/public/css/style.min.css">
+
+</head>
+
+<body>
+{{include file="application/views/common/footer.html"}}
+
+<div class="member-header">
+    <a class="set" href="/member/profile/index"><i class="icon iconfont">&#xe73a;</i></a>
+    <i class="shadow"></i>
+    <div class="user">
+        <div class="img">
+            <p>{{$data.m_nickname}}</p>
+            <img src="{{$data.m_avatar}}"></div>
+    </div>
+</div>
+<form id="proveForm">
+<div class="set">
+    <ul>
+        <li><i class="icon iconfont">&#xe788;</i><span>登陆账号：</span><input name="m_username" type="text" placeholder="在此输入您的登陆账号" value="{{$data.m_username}}"></li>
+        {{if !$data.m_username && !$data.m_password}}
+        <li><i class="icon iconfont">&#xe612;</i><span>登陆密码：</span><input name="m_password" type="password" placeholder="在此输入您的登录密码"></li>
+        {{else}}
+        <li><i class="icon iconfont">&#xe612;</i><span>原始密码：</span><input name="old_password" type="password" placeholder="在此输入您的原始密码"></li>
+        <li><i class="icon iconfont">&#xe612;</i><span>新密码：</span><input name="new_password" type="password" placeholder="在此输入您的新密码"></li>
+        {{/if}}
+        <!--<li><i class="icon iconfont">&#xe61a;</i><span>头像设置：</span>-->
+            <!--<div class="tx"><img id="openImg" src="{{$data.m_avatar}}" style="width:55px;height:55px;"/></div>-->
+            <!--<input type="hidden" name="m_avatar" id="m_avatar" value="{{$data.m_avatar}}" />-->
+            <!--<a class="upload"><input accept="image/*" type="file" id="upload"></a>-->
+        <!--</li>-->
+    </ul>
+    <input type="button" class="btn" id="btn" value="确定提交">
+</div>
+</form>
+<script src="/public/js/jquery-2.1.4.js"></script>
+<script src="/public/js/jquery-weui.js"></script>
+<script>
+    $(function(){
+
+        $('#btn').click(function(){
+            var m_username = $("input[name='m_username']").val();
+            var m_password = $("input[name='m_password']").val();
+
+            var old_password = $("input[name='old_password']").val();
+            var new_password = $("input[name='new_password']").val();
+
+            //账户不能为中文
+            if(m_username.length!=0){
+                if(m_username.match(/^[\u4e00-\u9fa5]+$/)){
+                    $.alert('用户名不能为中文');
+                    return;
+                }
+            }else{
+                $.alert('用户名不能为空');
+                return;
+            }
+            //密码不能为空
+            if(m_password==''){
+                $.alert('密码不能为空');
+                return;
+            }
+            //原始密码不能为空
+            if(old_password==''){
+                $.alert('原始密码不能为空');
+                return;
+            }
+            //新密码不能为空
+            if(new_password==''){
+                $.alert('新密码不能为空');
+                return;
+            }
+            getData(m_username,m_password,old_password,new_password);
+        });
+
+        //提交数据
+        function getData(m_username,m_password,old_password,new_password){
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url:'/ajax/data/save',
+                data:{m_username:m_username,m_password:m_password,old_password:old_password,new_password:new_password},// 你的formid
+                async: false,
+                dataType: "json",
+                error: function(request) {
+                    $.alert("提交错误,请重试");
+                },
+                success: function(data) {
+                    if(data.status == 'y'){
+                        $.alert(data.info);
+                        setTimeout(" location.href = '/member/member/index';", 1000);
+                    }else{
+                        $.alert(data.info);
+                    }
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

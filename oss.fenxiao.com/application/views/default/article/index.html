@@ -1,0 +1,76 @@
+{{include file="common/header.html"}}
+
+<div class="main">
+    {{include file="common/menu.html"}}
+
+    <div id="right">
+        <!--面包屑导航-->
+        <ol class="breadcrumb">
+            <li><a href="javascript:void(0);">文章管理 </a></li>
+            <li class="active">公告列表</li>
+        </ol>
+
+        <div class="right_con">
+            <!--搜索区域-->
+            <form class="form-inline pull-left" id="searchForm">
+                 <div class="form-group">标题：
+                    <input type="text" name="title" value="{{$title}}" class="form-control" placeholder="标题" style="width: 300px;">
+                </div>
+                <div class="form-group">
+                    状态：
+                    <select name="status" id="status" class="form-control">
+                        {{$statusOption}}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-default">搜索</button>
+            </form>
+            <button type="button" class="btn btn-default pull-right" onclick="window.location.reload();">刷新界面</button>
+            <button type="button" class="btn btn-primary pull-right"  onclick="location.href='/article/form/'">添加新闻</button>
+            <div class="clear10"></div>
+
+            <!-- 表格 -->
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <td>序号</td>
+                    <td>标题</td>
+                    <td>状态</td>
+                    <td>添加时间</td>
+                    <td>操作</td>
+                </tr>
+                {{if $data}}
+                {{foreach from=$data item=row}}
+                <tr>
+                    <td>{{$row.a_id}}</td>
+                    <td>
+						{{$row.a_title}}</td>
+
+                    <td>
+                        <a href="javascript:void(0);" data-json="确认要更改状态吗？" data-href="/article/status/id/{{$row.a_id}}/status/{{$row.a_status}}">
+                            <i class="glyphicon {{if $row.a_status == 1}}glyphicon-eye-open{{else}}glyphicon-eye-close{{/if}}" title="{{if $row.a_status == 2}}禁用{{else}}正常{{/if}}"></i>
+                            {{if $row.a_status == 1}}<span class="label label-success">正常</span>{{else}}<span class="label label-warning">禁用</span>{{/if}}
+                        </a>
+                    </td>
+                    <td>{{$row.a_addtime}}</td>
+                    <td>
+                        <a class="glyphicon glyphicon-edit" href="{{$baseUrl}}/form/id/{{$row.a_id}}" title="编辑"></a>&nbsp;&nbsp;
+                        <a class="glyphicon glyphicon-remove" data-json="确认要删除吗？" href="javascript:void(0);" title="删除" data-href="/article/delete/id/{{$row.a_id}}/"></a>&nbsp;&nbsp;
+                    </td>
+                </tr>
+                {{/foreach}}
+                {{/if}}
+            </table>
+            <!-- 分页 -->
+
+            {{if $data}}
+            <nav>
+                <ul class="pagination pull-right">{{$page}}</ul>
+            </nav>
+            {{/if}}
+        </div>
+    </div>
+    <div class="clear"></div>
+</div>
+<script>
+
+</script>
+{{include file="common/footer.html"}}

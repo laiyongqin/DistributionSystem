@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>支付页面</title>
+    <link rel="stylesheet" type="text/css" href="/public/js/weui/weui.min.css">
+    <link rel="stylesheet" type="text/css" href="/public/js/weui/jquery-weui.min.css">
+    <link rel="stylesheet" type="text/css" href="/public/css/style.min.css">
+    <link rel="stylesheet" type="text/css" href="/public/css/iconfont.css">
+</head>
+
+
+<body style="padding-bottom:4vw;">
+
+<div class="pay">
+
+    <div class="box">
+        <div class="title">收货人信息</div>
+        <div class="content">
+            <p>联系人：{{$addressInfo.a_realname}}</p>
+            <p>联系电话：{{$addressInfo.a_phone}}</p>
+            <p>联系地址：{{$addressInfo.a_province}},{{$addressInfo.a_city}},{{if $addressInfo.a_area}}{{$addressInfo.a_area}},{{/if}}{{$addressInfo.a_address}}</p>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="title">产品信息</div>
+        <div class="content">
+            <p>{{$orderInfo.p_title}} {{if $orderInfo.pp_title}}（{{$orderInfo.pp_title}}）{{/if}}￥{{$orderInfo.p_price}} * {{$orderInfo.o_number}}</p>
+            <p><span>购物合计总金额：{{$orderInfo.o_payment_amount}}元</span></p>
+        </div>
+    </div>
+    <input type="button" class="btn" value="微信支付" onclick="callpay()">
+</div>
+<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script src="/public/js/zepto.min.js"></script>
+<script src="/public/js/weui/jquery-weui.js"></script>
+<script type="text/javascript">
+    var appId     = '{{$signPackage.appId}}';var timestamp = '{{$signPackage.timestamp}}';
+    var nonceStr  = '{{$signPackage.nonceStr}}';var signature = '{{$signPackage.signature}}';
+
+    wx.config({
+        appId: appId,
+        timestamp:timestamp,
+        nonceStr: nonceStr,
+        signature: signature,
+        jsApiList: [
+            'chooseWXPay'
+        ]
+    });
+
+    function callpay() {
+        var orderNo = '{{$orderNo}}';
+        $.getJSON('/ajax/order/create/', {orderNo : orderNo},  function(data) {
+            if(data.status == 'y'){
+                var jsApiParameters = data.info;
+                wx.chooseWXPay({
+                    timestamp: jsApiParameters.timeStamp,
+                    nonceStr: jsApiParameters.nonceStr,
+                    package: jsApiParameters.package,
+                    signType: jsApiParameters.signType, // 注意：新版支付接口使用 MD5 加密
+                    paySign: jsApiParameters.paySign,
+                    success: function (res) {
+                        window.location.href = "/mall/order/index/";
+                    }
+                });
+            }else{
+                alert(data.info);
+            }
+
+        });
+    }
+</script>
+
+
+</body>
+</html>

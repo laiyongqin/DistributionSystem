@@ -1,0 +1,17 @@
+<div id="left">
+    <div class="btn-group-vertical" id="km_ment" role="group" aria-label="...">
+        {{foreach from=$menuLeftList key=m_id item=top}}
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>{{$top.m_name}}
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                {{foreach from=$top.son item=son}}
+                <li><a href="/{{$son.m_url}}">{{$son.m_name}}</a></li>
+                {{/foreach}}
+            </ul>
+        </div>
+        {{/foreach}}
+    </div>
+</div>

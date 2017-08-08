@@ -1,0 +1,5 @@
+{{if $allData}}
+{{foreach from=$allData item=vo}}
+<li><a href="/mall/news/details/id/{{$vo.n_id}}"><i class="icon iconfont">&#xe78f;</i>{{$vo.n_title}}</a></li>
+{{/foreach}}
+{{/if}}

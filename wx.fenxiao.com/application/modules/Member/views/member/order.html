@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>{{$pageTitle}}</title>
+    <link rel="stylesheet" type="text/css" href="/public/css/style.min.css">
+    <link rel="stylesheet" type="text/css" href="/public/css/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="/public/css/dropload.css">
+</head>
+<style>
+    .dropload-down{position: absolute;bottom:-13vw; width:200px;margin:0 0 0 -100px;left:50%;text-align: center;}
+</style>
+<body>
+{{include file="application/views/common/footer.html"}}
+<div class="member-header">
+    <a class="set" href="/member/profile/index"><i class="icon iconfont">&#xe626;</i></a>
+    <i class="shadow"></i>
+    <div class="user">
+        <div class="img">
+            <p>{{$userData.m_nickname}}</p>
+            <img src="{{$userData.m_avatar}}"></div>
+    </div>
+</div>
+
+<div class="orders-list2">
+    <div class="title">{{if $type==1}}下单未购买{{else}}下单已购买{{/if}}：<span>{{$numb}}</span></div>
+    <!-- 搜索 -->
+    <div class="search2">
+        <form action="/member/member/order/?mid={{$userData.m_id}}&type={{$type}}" id="searchFrom" method="post">
+            <i class="icon iconfont">&#xe608;</i>
+            <input name="smid" type="text" value="{{if $smid}}{{$smid}}{{else}}{{/if}}" placeholder="请输入会员ID">
+        </form>
+    </div>
+    <ul id="order_list" style="position: relative;">
+        {{if $data}}
+        {{foreach from=$data item=v}}
+        <li>
+            <img src="{{$smarty.const.IMAGE_URL}}{{$v.m_avatar}}" width="185" height="185">
+            <div class="text">
+                <p>昵称：{{$v.m_nickname}}</p>
+                <p>会员：{{if $v.m_vip==2}}是{{else}}否{{/if}}</p>
+                <p>订单号：{{$v.so_order_no}}</p>
+                <p>会员ID：{{$v.so_spokesman}}</p>
+            </div>
+        </li>
+        {{/foreach}}
+        {{/if}}
+    </ul>
+    <p class="down"></p>
+</div>
+<script src="/public/js/jquery-2.1.4.js"></script>
+<script src="/public/js/dropload.js"></script>
+<script>
+    $(document).ready(function(){
+        var page = 2;
+        var total    = parseInt('{{$total}}');
+        var pageSize = parseInt('{{$pageSize}}');
+        var mid      = parseInt('{{$userData.m_id}}');
+        var type      = parseInt('{{$type}}');
+        var smid     = parseInt('{{$smid}}');
+        if(total >= pageSize) {
+            $("#order_list").dropload({
+                domDown : {// 下方DOM
+                    domClass   : 'dropload-down',
+                    domRefresh : '<div class="dropload-refresh">↑上拉加载更多</div>',
+                    domLoad    : '<div class="dropload-load"><span class="loading"></span>加载中...</div>',
+                    domNoData  : '<div class="dropload-noData">没有啦╮(╯_╰)╭</div>'
+                },
+                scrollArea : window,
+                loadDownFn : function(me){
+
+                    $.ajax({
+                        type: 'GET',
+                        url : "/member/member/order/?mobileType=load&page=" + page + '&mid=' + mid + '&smid=' + smid + '&type=' + type,
+                        dataType: 'html',
+                        success: function(data){
+                            if(data) {
+                                //赋值数据
+                                $("#order_list").append(data);
+                                page++;
+                            } else {
+                                // 锁定
+                                me.lock();
+                                // 无数据
+                                me.noData();
+                            }
+                            // 每次数据加载完，必须重置
+                            me.resetload();
+                        },
+                        error: function(xhr, type){
+                            // 即使加载出错，也得重置
+                            me.resetload();
+                        }
+                    });
+                }
+            });
+        }
+    })
+</script>
+</body>
+</html>

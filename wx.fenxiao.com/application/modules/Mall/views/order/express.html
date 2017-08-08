@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>快递跟踪</title>
+    <link rel="stylesheet" type="text/css" href="/public/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/public/css/iconfont.css">
+</head>
+<style>
+    .refund-list   {}
+    .orders-header a{color:#fff;}
+    .refund-list h3{ background: #d5d5d5;padding:3vw 0 1vw 9vw;   font-size: 4vw; background:#00c191;color:#fff;margin-bottom: 6vw;}
+    .refund-list p{margin-bottom:1vw;padding-right: 0.5vw;}
+    .refund-list ul li:first-child{color:#00c191;border-left:1vw solid #d5d5d5;}
+    .refund-list ul li:first-child i{ background:#00c191;left:-2.4vw; width:2.5vw; height:2.5vw;border:1vw solid #f0f0f0; }
+    .refund-list ul li                 { position:relative; height:auto; color:#888;min-height:20vw;padding:0 0 2vw 5vw;overflow: hidden; margin-left:8%; border-left:1vw solid #999; font-size:3.5vw; overflow:inherit;}
+    .refund-list ul .adopt             { border-left:1vw solid #d5d5d5;}
+    .refund-list ul li i               { position:absolute; top:0vw; left:-1.5vw; width:2.2vw; height:2.2vw; border:none; background:#d5d5d5; border-radius:50%;}
+    </style>
+<body>
+{{include file="application/views/common/footer.html"}}
+
+<div class="orders-header">
+    <a href="/mall/order/index"><i class="icon iconfont">&#xe614;</i>我的订单</a>
+</div>
+{{if $expressData}}
+<div class="refund-list">
+    <h3>
+        <p>快递公司：{{$data.o_express_company}}</p>
+        <p>快递单号：{{$data.o_express_number}}</p>
+    </h3>
+    <ul>
+        {{foreach from=$expressData.data key=key item=v}}
+        <li class="adopt">
+            <i></i>
+            <p>{{$v.context}}</p>
+            <p>{{$v.ftime}}</p>
+        </li>
+        {{/foreach}}
+    </ul>
+</div>
+{{/if}}
+</body>
+</html>

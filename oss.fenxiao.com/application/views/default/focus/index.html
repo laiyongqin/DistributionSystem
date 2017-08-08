@@ -1,0 +1,99 @@
+{{include file="common/header.html"}}
+
+<div class="main">
+    {{include file="common/menu.html"}}
+
+    <div id="right">
+        <!--面包屑导航-->
+        <ol class="breadcrumb">
+            <li><a href="javascript:void(0);">微信管理 </a></li>
+            <li class="active">关注回复配置</li>
+        </ol>
+
+        <div class="right_con">
+            <!--搜索区域-->
+            <form class="form-inline pull-left">
+                <div class="form-group">模板：
+                    <select class="form-control" name="kcate" id="kcate" class="input-medium" style="width:120px;">
+                        {{$subscribeCate}}
+                    </select>
+                </div>
+                <div class="form-group">标题：
+                    <input type="text" name="ktitle" value="{{$ktitle}}" class="form-control" placeholder="标题">
+                </div>
+                <div class="form-group">内容类型：
+                    <select class="form-control" name="ktype" id="ktype" class="input-medium" style="width:120px;">
+                    {{$subscribeType}}
+                    </select>
+                </div>
+                <div class="form-group">状态：
+                    <select class="form-control" name="kstatus" id="kstatus"  class="input-medium" style="width:120px;">
+                    {{$statusType}}
+
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-default">搜索</button>
+            </form>
+            <button type="button" class="btn btn-default pull-right" onclick="window.location.reload();">刷新界面</button>
+            <button type="button" class="btn btn-primary pull-right"  onclick="location.href='/focus/add/'">添加</button>
+
+            <div class="clear10"></div>
+
+            <!-- 表格 -->
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <!--<th>标题</th>-->
+                    <!--<th>关键字</th>-->
+                    <th>回复模板</th>
+                    <th>内容类型</th>
+                    <!--<th>跳转链接</th>-->
+                    <th>状态</th>
+                    <th>开始时间</th>
+                    <th>结束时间</th>
+                    <th>发布时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{if $allsubscribeData}}
+                {{foreach from=$allsubscribeData item=v}}
+                <tr>
+                    <!--<td >{{$v.s_title}}</td>-->
+                    <!--<td >{{$v.k_keys}}</td>-->
+                    <td >{{$subscribeCateList[$v.s_cate]}}</td>
+                    <td >{{$subscribeList[$v.s_type]}}</td>
+                    <!--<td >{{$v.s_url}}</td>-->
+                    <td >
+                        <a href="javascript:void(0);" data-json="确认要更改状态吗？" data-href="/focus/status/id/{{$v.s_id}}/status/{{$v.s_status}}">
+                            <i class="glyphicon {{if $v.s_status == 1}}glyphicon-eye-open{{else}}glyphicon-eye-close{{/if}}" title="{{if $v.s_status == 2}}禁用{{else}}正常{{/if}}"></i>
+                            {{if $v.s_status == 1}}<span class="label label-success">正常</span>{{else}}<span class="label label-warning">禁用</span>{{/if}}
+                        </a>
+                       
+                    </td>
+                    <td >{{if $v.s_cate != 1}}{{$v.s_beginTime}}{{/if}} </td>
+                    <td >{{if $v.s_cate != 1}}{{$v.s_endTime}}{{/if}}  </td>
+                    <td >{{$v.addtime}} </td>
+                    <td>
+                        <a title="编辑关键字" data-target="#formModal" href="/focus/add/id/{{$v.s_id}}" ><i class="glyphicon glyphicon-edit"></i></a>
+
+                    </td>
+                </tr>
+                {{/foreach}}
+                {{/if}}
+                </tbody>
+            </table>
+
+            <!-- 分页 -->
+            {{if $allsubscribeData}}
+            <nav>
+                <ul class="pagination pull-right">{{$page}}</ul>
+            </nav>
+            {{/if}}
+        </div>
+
+    </div>
+    <div class="clear"></div>
+</div>
+
+{{include file="common/footer.html"}}

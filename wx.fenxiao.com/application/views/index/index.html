@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>首页</title>
+<link rel="stylesheet" type="text/css" href="/public/css/swiper.min.css">
+<link rel="stylesheet" type="text/css" href="/public/css/style.min.css">
+
+</head>
+
+<body>
+{{include file="application/views/common/footer.html"}}
+
+<!-- banner -->
+<div class="swiper-container banner">
+        <div class="swiper-wrapper">
+            {{if $adList}}
+                {{foreach from=$adList item=vo}}
+                    <div class="swiper-slide"><a href="{{$vo.a_link}}"><img src="{{$vo.a_picture}}"></a></div>
+                {{/foreach}}
+            {{/if}}
+
+        </div>
+        <!-- Add Pagination -->
+<div class="swiper-pagination"></div>
+</div>
+
+
+<!-- 搜索 -->
+<form method="get" action="/index">
+<div class="category">
+    <div class="sorts"><i class="icon iconfont">&#xe616;</i></div>
+    <div class="search">
+        <i class="icon iconfont">&#xe608;</i>
+        <input name="title" value="{{$title}}" type="text" placeholder="请输入商品名称">
+    </div>
+</div>
+</form>
+
+
+<div class="pro-list">
+    <ul>
+        {{if $productList}}
+            {{foreach from=$productList item=vo}}
+                <li class="products cate_{{$vo.pc_id}}">
+                    <i></i>
+                    <a href="/mall/product/details/id/{{$vo.p_id}}">
+                        <img src="{{$vo.p_cover}}" >
+                        <h4>{{$vo.p_title}}</h4>
+                        <p>￥{{$vo.p_event_price}}</p>
+                    </a>
+                </li>
+        {{/foreach}}
+        {{/if}}
+
+    </ul>
+</div>
+
+<p class="down"></p>
+
+<!-- 产品分类-弹出框 -->
+<div class="popup-bj"></div>
+<div class="sorts-close"><i class="icon iconfont">&#xe725;</i></div>
+<div class="sorts-popup">
+
+
+    <div class="groups">
+        <div class="title">产品目录</div>
+        <ul>
+            {{if $cateList}}
+            {{foreach from=$cateList key=key item=vo}}
+            <li><span class="icon iconfont">&#xe7ab;</span><a href="index?pid={{$key}}">{{$vo}}</a><i class="icon iconfont">&#xe775;</i></li>
+            {{/foreach}}
+            {{/if}}
+        </ul>
+    </div>
+</div>
+
+<script src="/public/js/jquery-2.1.4.js"></script>
+<script src="/public/js/swiper.jquery.min.js"></script>
+<script src="/public/js/lp.js"></script>
+<script>
+
+    var swiper = new Swiper('.swiper-container', {
+        pagination: '.swiper-pagination',
+        nextButton: '.swiper-button-next',
+        prevButton: '.swiper-button-prev',
+        paginationClickable: true,
+        spaceBetween: 30,
+        centeredSlides: true,
+        autoplay: 5000,
+        autoplayDisableOnInteraction: false
+    });
+
+    $('.menu a').click(function(){
+        var cate = parseInt($(this).attr('cate'));
+        if(cate >= 0){
+            if(cate == 0){
+                $('.products').show();
+            }else{
+                $('.products').hide();
+                $('.cate_' + cate).show();
+            }
+        }
+
+        $(this).addClass('on').siblings().removeClass('on');
+    })
+
+</script>
+</body>
+</html>

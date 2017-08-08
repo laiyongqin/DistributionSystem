@@ -1,0 +1,93 @@
+{{include file="common/header.html"}}
+<link href="/public/js/umeditor/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
+<style></style>
+<div class="main">
+    {{include file="common/menu.html"}}
+    <div id="right">
+        <!--面包屑导航-->
+        <ol class="breadcrumb">
+            <li><a href="/article/index">公告管理 </a></li>
+            <li class="active">公告详情</li>
+        </ol>
+        <div class="right_con">
+            <form class="form-horizontal" id="form-save" action="/article/save/">
+                <div class="tab-pane active" id="basic_right">
+                    <input type="hidden" name="id" value="{{$row.a_id}}" />
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">标题</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="a_title" value="{{$row.a_title}}" placeholder="标题" datatype="*" nullmsg="请填写标题" style="width: 400px;"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">副标题</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="a_desc" value="{{$row.a_desc}}" placeholder="副标题" datatype="*" nullmsg="请填写副标题" style="width: 400px;"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">内容</label>
+                        <div class="col-sm-4">
+                            <textarea name="a_content" id="a_content" style="width:800px;overflow-y:auto;max-height:200px;">{{$row.a_content}}</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">状态</label>
+                        <div class="col-sm-6">
+                            <select name="a_status" id="a_status" class="form-control" style="width: 200px;">
+                                {{$statusOption}}
+                            </select>
+                        </div>
+                        <label style="color:red;"></label>
+                        <span class="help-inline"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label"></label>
+                    <div class="controls">
+                        <button class="btn btn-primary" type="submit">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!--&lt;!&ndash;弹窗&ndash;&gt;-->
+        <!--<form class="form-horizontal" action="/ajax/productlight/save/" method="post">-->
+        <!--<div class="modal fade" id="adminModal" tabindex="-1" role="dialog"></div>-->
+        <!--</form>-->
+    </div>
+    <div class="clear"></div>
+</div>
+<script src="/public/js/umeditor/umeditor.config.js"></script>
+<script src="/public/js/umeditor/umeditor.js"></script>
+<script src="/public/js/umeditor/lang/zh-cn/zh-cn.js"></script>
+<script src="/public/js/bootstrap-customfile.js"></script>
+<script src="/public/js/bootstrap-datetimepicker.js"></script>
+<script>
+    var editor =  '';
+
+    $(function(){
+        editor = UM.getEditor('a_content');
+    });
+
+    $("#form-save").Validform({
+        ajaxPost: true,
+        tipSweep: true,
+        tiptype:function(msg,o,cssctl){
+            if(o.type == 3)
+                $.dialog.tips(msg);
+        },
+        beforeSubmit:function(curform){
+        },
+        callback:function(response){
+            $.dialog.tips(response.info);
+            if ( response.status == 'y' ) {
+                window.setTimeout(function(){
+                    location.reload();
+                }, 2000)
+            }
+        }
+    });
+</script>
+{{include file="common/footer.html"}}

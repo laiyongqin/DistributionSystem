@@ -1,0 +1,67 @@
+{{include file="common/header.html"}}
+
+<div class="main">
+    {{include file="common/menu.html"}}
+
+    <div id="right">
+        <!--面包屑导航-->
+        <ol class="breadcrumb">
+            <li><a href="/member/index">会员列表 </a></li>
+            <li class="active">推广人列表</li>
+        </ol>
+        <div class="right_con">
+            <!--搜索区域-->
+            <form class="form-inline pull-left">
+                <div class="form-group">关注时间:
+                    <input type="text" class="form-control" name="startTime" id="startTime" value="{{$startTime}}" style="width:180px; display: inline-block;"> ~
+                    <input type="text" class="form-control" name="endTime" id="endTime" value="{{$endTime}}" style="width:180px; display: inline-block;">&nbsp;&nbsp;
+                </div>
+                <button type="submit" class="btn btn-default" >搜索</button>
+            </form>
+            <button type="button" class="btn btn-default pull-right" onclick="window.location.reload();">刷新界面</button>
+            <div class="clear10"></div>
+
+            <!-- 表格 -->
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <td>推广人昵称</td>
+                    <td>推广人用户ID</td>
+                    <td>状态</td>
+                    <td>关注时间</td>
+                </tr>
+                {{if $data}}
+                {{foreach from=$data item=row}}
+                <tr>
+                    <td>{{$row.m_nickname}}</td>
+                    <td>{{$row.sp_spokesman}}</td>
+                    <td>{{if $row.sp_status==1}}
+                        <span class="label label-success">正常</span>
+                        {{else if $row.sp_status==2}}<span class="label label-danger">解除</span>
+                        {{/if}}</td>
+                    <td>{{$row.sp_addtime}}</td>
+                </tr>
+                {{/foreach}}
+                {{/if}}
+            </table>
+
+            <!-- 分页 -->
+            {{if $data}}
+            <nav>
+                <ul class="pagination pull-right">{{$page}}</ul>
+            </nav>
+            {{/if}}
+        </div>
+
+    </div>
+    <div class="clear"></div>
+</div>
+<link href="/public/css/bootstrap-datetimepicker.css" rel="stylesheet">
+<script src="/public/js/bootstrap-datetimepicker.js"></script>
+<script>
+    $("#startTime,#endTime").datetimepicker({
+        format: "yyyy-mm-dd hh:ii",
+        autoclose: 1,
+        pickerPosition: "bottom-left"
+    });
+</script>
+{{include file="common/footer.html"}}
